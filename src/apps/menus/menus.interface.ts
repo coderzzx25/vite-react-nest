@@ -1,4 +1,3 @@
-import { IPermissionInfo } from '../permissions/permissions.interface';
 export interface ISelectMenuParams {
   page: number;
   size: number;
@@ -41,9 +40,4 @@ export interface IUpdateMenuBody {
   menuPid?: number;
   status?: number;
   updateTime?: number;
-}
-
-export interface IUserMenuResponseData {
-  menus: IMenuInfo[];
-  permissions: IPermissionInfo[];
 }

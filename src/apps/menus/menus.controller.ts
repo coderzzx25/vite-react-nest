@@ -7,7 +7,7 @@ import {
   ISelectMenuResponseData,
   ICreateMenuBody,
   IUpdateMenuBody,
-  IUserMenuResponseData,
+  IMenuInfo,
 } from './menus.interface';
 import {
   ApiMenuListOperation,
@@ -17,7 +17,6 @@ import {
 } from './menus.decorators';
 import { getTimestamp, timestampToDate } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
-import { PermissionsService } from '../permissions/permissions.service';
 
 @ApiTags('菜单模块')
 @Controller('menus')
@@ -25,7 +24,6 @@ export class MenusController {
   constructor(
     private readonly menusService: MenusService,
     private readonly rolesService: RolesService,
-    private readonly permissionsService: PermissionsService,
   ) {}
 
   @ApiMenuListOperation()
@@ -152,7 +150,7 @@ export class MenusController {
   }
 
   @ApiUserMenuListOperation()
-  async getUserMenuList(@Param('roleId') role_id: number): Promise<IUserMenuResponseData> {
+  async getUserMenuList(@Param('roleId') role_id: number): Promise<IMenuInfo[]> {
     if (!role_id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
     // 校验角色是否存在
@@ -160,33 +158,12 @@ export class MenusController {
 
     if (!roleInfo) throw new HttpException('角色不存在', HttpStatus.BAD_REQUEST);
 
-    const { roleMenus, rolePermissions } = roleInfo;
+    const { roleMenus } = roleInfo;
 
     const roleArray = roleMenus.split(',').map(Number);
-    const rolePermissionsArray = rolePermissions.split(',').map(Number);
 
     const menuList = await this.menusService.getMenuListByIdsService(roleArray);
-    const permissionList = await this.permissionsService.getPermissionListByIdsService(rolePermissionsArray);
 
-    const data: IUserMenuResponseData = {
-      menus: [],
-      permissions: [],
-    };
-
-    data.menus = mapMenusToRoutes(menuList);
-    const newPermissionList = permissionList.map((item) => {
-      return {
-        id: item.id,
-        permissionName: item.permissionName,
-        permissionValue: item.permissionValue,
-        status: item.status,
-        createTime: timestampToDate(item.createTime),
-        updateTime: timestampToDate(item.updateTime),
-        menuId: item.menuId,
-      };
-    });
-    data.permissions = newPermissionList;
-
-    return data;
+    return mapMenusToRoutes(menuList);
   }
 }
