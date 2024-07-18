@@ -36,7 +36,7 @@ export class RolesController {
       return {
         id: item.id,
         roleName: item.roleName,
-        roleMenus: item.roleMenus,
+        roleMenus: item.roleMenus.split(',').map(Number),
         rolePermissions: item.rolePermissions,
         status: item.status,
         createTime: timestampToDate(item.createTime),

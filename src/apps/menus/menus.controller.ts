@@ -14,8 +14,9 @@ import {
   ApiCreateMenuOperation,
   ApiUpdateMenuOperation,
   ApiUserMenuListOperation,
+  ApiAllMenuListOperation,
 } from './menus.decorators';
-import { getTimestamp, timestampToDate } from '../../utils/datetime';
+import { getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 
 @ApiTags('菜单模块')
@@ -164,6 +165,12 @@ export class MenusController {
 
     const menuList = await this.menusService.getMenuListByIdsService(roleArray);
 
+    return mapMenusToRoutes(menuList);
+  }
+
+  @ApiAllMenuListOperation()
+  async getAllMenuList(): Promise<IMenuInfo[]> {
+    const menuList = await this.menusService.getAllMenuListService();
     return mapMenusToRoutes(menuList);
   }
 }

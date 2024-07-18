@@ -8,7 +8,7 @@ export interface ISelectRoleBody {
 interface RoleInfo {
   id: number;
   roleName: string;
-  roleMenus: string;
+  roleMenus: number[];
   rolePermissions: string;
   status: number;
   createTime: string;

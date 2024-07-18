@@ -272,3 +272,54 @@ export const ApiUserMenuListOperation = () => {
     Get('user-menu/:roleId'),
   );
 };
+
+export const ApiAllMenuListOperation = () => {
+  return applyDecorators(
+    ApiBearerAuth(),
+    ApiOperation({ summary: '所有菜单列表' }),
+    ApiResponse({
+      status: 200,
+      description: '成功',
+      schema: {
+        type: 'object',
+        properties: {
+          total: { type: 'number', description: '总数', example: 4 },
+          data: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', description: 'ID', example: 1 },
+                menuName: { type: 'string', description: '菜单名称', example: '首页' },
+                menuUrl: { type: 'string', description: '菜单路径', example: '/home' },
+                menuIcon: { type: 'string', description: '菜单图标', example: 'icon-home' },
+                menuPid: { type: 'number', description: '父级ID', example: 0 },
+                status: { type: 'number', description: '状态', example: 1 },
+                createTime: { type: 'string', description: '创建时间', example: '2021-01-01 00:00:00' },
+                updateTime: { type: 'string', description: '更新时间', example: '2021-01-01 00:00:00' },
+                children: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number', description: 'ID', example: 2 },
+                      menuName: { type: 'string', description: '菜单名称', example: '用户管理' },
+                      menuUrl: { type: 'string', description: '菜单路径', example: '/user' },
+                      menuIcon: { type: 'string', description: '菜单图标', example: 'icon-user' },
+                      menuPid: { type: 'number', description: '父级ID', example: 1 },
+                      status: { type: 'number', description: '状态', example: 1 },
+                      createTime: { type: 'string', description: '创建时间', example: '2021-01-01 00:00:00' },
+                      updateTime: { type: 'string', description: '更新时间', example: '2021-01-01 00:00:00' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+    UseGuards(AuthGuard),
+    Get('all-menu-list'),
+  );
+};
