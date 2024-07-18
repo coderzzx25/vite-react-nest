@@ -6,7 +6,7 @@ import { CoderzzxMenus } from '../entities/menus.entity';
 import { RolesModule } from '../roles/roles.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CoderzzxMenus]), RolesModule],
+  imports: [TypeOrmModule.forFeature([CoderzzxMenus]), forwardRef(() => RolesModule)],
   controllers: [MenusController],
   providers: [MenusService],
   exports: [MenusService],

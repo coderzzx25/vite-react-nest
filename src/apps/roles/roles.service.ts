@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CoderzzxRoles } from '../entities/roles.entity';
-import { ISelectRoleBody } from './roles.interface';
+import { ICreateRoleService, ISelectRoleBody, IUpdateRoleService } from './roles.interface';
 
 @Injectable()
 export class RolesService {
@@ -41,5 +41,21 @@ export class RolesService {
       data: roleList,
       total,
     };
+  }
+
+  async getRoleByNameService(roleName: string): Promise<CoderzzxRoles | null> {
+    const result = await this.rolesRepository.findOne({ where: { roleName } });
+    return result;
+  }
+
+  async createRoleService(roleInfo: ICreateRoleService) {
+    const result = await this.rolesRepository.save(roleInfo);
+    return result;
+  }
+
+  async updateRoleService(roleInfo: IUpdateRoleService) {
+    const { id } = roleInfo;
+    const result = await this.rolesRepository.update(id, roleInfo);
+    return result;
   }
 }
