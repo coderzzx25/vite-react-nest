@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
 import { AuthsService } from './auths.service';
 import { UsersService } from '../users/users.service';
-import { IAccountLoginInfo, IAccountLoginData } from './auths.interface';
+import { IAccountLoginBody, IAccountLoginResponseData } from './auths.interface';
 import { ApiAccountLoginOperation } from './auth.decorators';
 
 @ApiTags('认证模块')
@@ -16,7 +16,7 @@ export class AuthsController {
   ) {}
 
   @ApiAccountLoginOperation()
-  async accountLogin(@Body() body: IAccountLoginInfo): Promise<IAccountLoginData> {
+  async accountLogin(@Body() body: IAccountLoginBody): Promise<IAccountLoginResponseData> {
     const { userName, userPassword } = body;
 
     if (!userName || !userPassword) {

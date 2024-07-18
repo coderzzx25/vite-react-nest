@@ -7,10 +7,10 @@ import {
   ApiUpdatePermissionOperation,
 } from './permissions.decorators';
 import {
-  ISelectPermissionInfo,
-  ISelectPermissionData,
-  ICreatePermissionInfo,
-  IUpdatePermissionInfo,
+  ISelectPermissionParams,
+  ISelectPermissionResponseData,
+  ICreatePermissionBody,
+  IUpdatePermissionBody,
 } from './permissions.interface';
 import { MenusService } from '../menus/menus.service';
 import { timestampToDate, getTimestamp } from '../../utils/datetime';
@@ -30,12 +30,12 @@ export class PermissionsController {
     @Query('permissionName') permissionName?: string,
     @Query('menuId') menuId?: number,
     @Query('status') status?: number,
-  ): Promise<{ total: number; data: ISelectPermissionData[] }> {
+  ): Promise<ISelectPermissionResponseData> {
     if (!page || !size) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
-    const selectInfo: ISelectPermissionInfo = {
+    const selectInfo: ISelectPermissionParams = {
       page,
       size,
     };
@@ -71,7 +71,7 @@ export class PermissionsController {
   }
 
   @ApiCreatePermissionOperation()
-  async createPermission(@Body() createPermissionInfo: ICreatePermissionInfo): Promise<string> {
+  async createPermission(@Body() createPermissionInfo: ICreatePermissionBody): Promise<string> {
     const { permissionName, permissionValue, menuId, status } = createPermissionInfo;
     if (!permissionName || !permissionValue || !menuId || status === undefined) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
@@ -105,7 +105,7 @@ export class PermissionsController {
   }
 
   @ApiUpdatePermissionOperation()
-  async updatePermission(@Body() updatePermissionInfo: IUpdatePermissionInfo) {
+  async updatePermission(@Body() updatePermissionInfo: IUpdatePermissionBody) {
     const { id, permissionName, permissionValue, menuId, status } = updatePermissionInfo;
 
     if (!id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
@@ -117,7 +117,7 @@ export class PermissionsController {
       throw new HttpException('权限不存在', HttpStatus.BAD_REQUEST);
     }
 
-    const updateInfo: IUpdatePermissionInfo = {
+    const updateInfo: IUpdatePermissionBody = {
       id,
     };
 

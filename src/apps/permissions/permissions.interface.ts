@@ -1,4 +1,4 @@
-export interface ISelectPermissionInfo {
+export interface ISelectPermissionParams {
   page: number;
   size: number;
   permissionName?: string;
@@ -6,7 +6,7 @@ export interface ISelectPermissionInfo {
   status?: number;
 }
 
-export interface ISelectPermissionData {
+export interface IPermissionInfo {
   id: number;
   permissionName: string;
   permissionValue: string;
@@ -14,10 +14,15 @@ export interface ISelectPermissionData {
   createTime: string;
   updateTime: string;
   menuId: number;
-  menuArr: number[];
+  menuArr?: number[];
 }
 
-export interface ICreatePermissionInfo {
+export interface ISelectPermissionResponseData {
+  total: number;
+  data: IPermissionInfo[];
+}
+
+export interface ICreatePermissionBody {
   permissionName: string;
   permissionValue: string;
   menuId: number;
@@ -26,7 +31,7 @@ export interface ICreatePermissionInfo {
   updateTime?: number;
 }
 
-export interface IUpdatePermissionInfo {
+export interface IUpdatePermissionBody {
   id: number;
   permissionName?: string;
   permissionValue?: string;

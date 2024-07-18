@@ -1,9 +1,9 @@
-export interface IAccountLoginInfo {
+export interface IAccountLoginBody {
   userName: string;
   userPassword: string;
 }
 
-export interface IAccountLoginData {
+export interface IAccountLoginResponseData {
   userInfo: {
     userName: string;
     userNickName: string;

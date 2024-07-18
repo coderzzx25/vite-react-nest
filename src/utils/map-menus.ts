@@ -1,9 +1,9 @@
 import { CoderzzxMenus } from '../apps/entities/menus.entity';
-import { IMenuRoute } from '../apps/menus/menus.interface';
+import { IMenuInfo } from '../apps/menus/menus.interface';
 import { timestampToDate } from './datetime';
 
-export const mapMenusToRoutes = (menuList: CoderzzxMenus[]): IMenuRoute[] => {
-  const handleMenu = (menus: CoderzzxMenus[], pid: number): IMenuRoute[] => {
+export const mapMenusToRoutes = (menuList: CoderzzxMenus[]): IMenuInfo[] => {
+  const handleMenu = (menus: CoderzzxMenus[], pid: number): IMenuInfo[] => {
     return menus
       .filter((menu) => menu.menuPid === pid)
       .map((menu) => {

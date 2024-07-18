@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoderzzxMenus } from '../entities/menus.entity';
 import { Repository } from 'typeorm';
-import { ISelectMenuInfo, ICreateMenuInfo, IUpdateMenuInfo } from './menus.interface';
+import { ISelectMenuParams, ICreateMenuBody, IUpdateMenuBody } from './menus.interface';
 import { In } from 'typeorm';
+import { async } from 'rxjs';
 
 @Injectable()
 export class MenusService {
@@ -12,7 +13,7 @@ export class MenusService {
     private readonly menusRepository: Repository<CoderzzxMenus>,
   ) {}
 
-  async getMenuListService(selectInfo: ISelectMenuInfo): Promise<{ data: CoderzzxMenus[]; total: number }> {
+  async getMenuListService(selectInfo: ISelectMenuParams): Promise<{ data: CoderzzxMenus[]; total: number }> {
     const { page, size, menuName, status } = selectInfo;
     const menuQuery = this.menusRepository.createQueryBuilder('menus');
     if (menuName) {
@@ -72,7 +73,7 @@ export class MenusService {
    * @param createInfo 菜单信息
    * @returns 创建结果
    */
-  async createMenuService(createInfo: ICreateMenuInfo) {
+  async createMenuService(createInfo: ICreateMenuBody) {
     const result = await this.menusRepository.save(createInfo);
     return result;
   }
@@ -82,7 +83,7 @@ export class MenusService {
    * @param updateInfo 菜单信息
    * @returns 更新结果
    */
-  async updateMenuService(updateInfo: IUpdateMenuInfo) {
+  async updateMenuService(updateInfo: IUpdateMenuBody) {
     const { id } = updateInfo;
     const result = await this.menusRepository.update(id, updateInfo);
     return result;
@@ -95,6 +96,15 @@ export class MenusService {
    */
   async getMenuListByIdsService(ids: number[]): Promise<CoderzzxMenus[]> {
     const result = await this.menusRepository.find({ where: { id: In(ids) } });
+    return result;
+  }
+
+  /**
+   * 查询所有菜单
+   * @returns 菜单列表
+   */
+  async getAllMenuListService(): Promise<CoderzzxMenus[]> {
+    const result = await this.menusRepository.find();
     return result;
   }
 }

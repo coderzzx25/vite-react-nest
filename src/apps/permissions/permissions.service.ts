@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { CoderzzxPermissions } from '../entities/permission.entity';
-import { ISelectPermissionInfo, ICreatePermissionInfo, IUpdatePermissionInfo } from './permissions.interface';
+import { ISelectPermissionParams, ICreatePermissionBody, IUpdatePermissionBody } from './permissions.interface';
 
 @Injectable()
 export class PermissionsService {
@@ -11,7 +11,7 @@ export class PermissionsService {
   ) {}
 
   async getPermissionListService(
-    selectInfo: ISelectPermissionInfo,
+    selectInfo: ISelectPermissionParams,
   ): Promise<{ data: CoderzzxPermissions[]; total: number }> {
     const { page, size, permissionName, menuId, status } = selectInfo;
 
@@ -72,7 +72,7 @@ export class PermissionsService {
    * @param createInfo 权限信息
    * @returns 创建结果
    */
-  async createPermissionService(createInfo: ICreatePermissionInfo) {
+  async createPermissionService(createInfo: ICreatePermissionBody) {
     const result = await this.permissionsRepository.save(createInfo);
     return result;
   }
@@ -87,9 +87,18 @@ export class PermissionsService {
     return result;
   }
 
-  async updatePermissionService(updateInfo: IUpdatePermissionInfo) {
+  async updatePermissionService(updateInfo: IUpdatePermissionBody) {
     const { id, ...updateData } = updateInfo;
     const result = await this.permissionsRepository.update(id, updateData);
+    return result;
+  }
+
+  /**
+   * 查询所有权限
+   * @returns 权限列表
+   */
+  async getAllPermissionListService(): Promise<CoderzzxPermissions[]> {
+    const result = await this.permissionsRepository.find();
     return result;
   }
 }

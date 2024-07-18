@@ -2,14 +2,20 @@ import { Controller, Query, Body, HttpException, HttpStatus, Param } from '@nest
 import { ApiTags } from '@nestjs/swagger';
 import { MenusService } from './menus.service';
 import { mapMenusToRoutes } from '../../utils/map-menus';
-import { ISelectMenuInfo, IMenuRoute, ICreateMenuInfo, IUpdateMenuInfo, IUserMenuInfo } from './menus.interface';
+import {
+  ISelectMenuParams,
+  ISelectMenuResponseData,
+  ICreateMenuBody,
+  IUpdateMenuBody,
+  IUserMenuResponseData,
+} from './menus.interface';
 import {
   ApiMenuListOperation,
   ApiCreateMenuOperation,
   ApiUpdateMenuOperation,
   ApiUserMenuListOperation,
 } from './menus.decorators';
-import { getTimestamp } from '../../utils/datetime';
+import { getTimestamp, timestampToDate } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 import { PermissionsService } from '../permissions/permissions.service';
 
@@ -28,12 +34,12 @@ export class MenusController {
     @Query('size') size: number,
     @Query('menuName') menuName?: string,
     @Query('status') status?: number,
-  ): Promise<{ total: number; data: IMenuRoute[] }> {
+  ): Promise<ISelectMenuResponseData> {
     if (!page || !size) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
-    const selectInfo: ISelectMenuInfo = {
+    const selectInfo: ISelectMenuParams = {
       page,
       size,
     };
@@ -51,7 +57,7 @@ export class MenusController {
   }
 
   @ApiCreateMenuOperation()
-  async createMenu(@Body() createMenuInfo: ICreateMenuInfo): Promise<string> {
+  async createMenu(@Body() createMenuInfo: ICreateMenuBody): Promise<string> {
     const { menuName, menuIcon, menuUrl, menuPid, status } = createMenuInfo;
 
     if (!menuName || !menuIcon || !menuUrl || menuPid === undefined || status === undefined) {
@@ -87,7 +93,7 @@ export class MenusController {
   }
 
   @ApiUpdateMenuOperation()
-  async updateMenu(@Body() updateMenuInfo: IUpdateMenuInfo): Promise<string> {
+  async updateMenu(@Body() updateMenuInfo: IUpdateMenuBody): Promise<string> {
     const { id, menuName, menuIcon, menuUrl, menuPid, status } = updateMenuInfo;
 
     if (!id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
@@ -99,7 +105,7 @@ export class MenusController {
       throw new HttpException('菜单不存在', HttpStatus.BAD_REQUEST);
     }
 
-    const updateInfo: IUpdateMenuInfo = {
+    const updateInfo: IUpdateMenuBody = {
       id,
     };
 
@@ -146,7 +152,7 @@ export class MenusController {
   }
 
   @ApiUserMenuListOperation()
-  async getUserMenuList(@Param('roleId') role_id: number): Promise<IUserMenuInfo> {
+  async getUserMenuList(@Param('roleId') role_id: number): Promise<IUserMenuResponseData> {
     if (!role_id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
     // 校验角色是否存在
@@ -162,13 +168,24 @@ export class MenusController {
     const menuList = await this.menusService.getMenuListByIdsService(roleArray);
     const permissionList = await this.permissionsService.getPermissionListByIdsService(rolePermissionsArray);
 
-    const data: IUserMenuInfo = {
+    const data: IUserMenuResponseData = {
       menus: [],
       permissions: [],
     };
 
     data.menus = mapMenusToRoutes(menuList);
-    data.permissions = permissionList;
+    const newPermissionList = permissionList.map((item) => {
+      return {
+        id: item.id,
+        permissionName: item.permissionName,
+        permissionValue: item.permissionValue,
+        status: item.status,
+        createTime: timestampToDate(item.createTime),
+        updateTime: timestampToDate(item.updateTime),
+        menuId: item.menuId,
+      };
+    });
+    data.permissions = newPermissionList;
 
     return data;
   }
