@@ -11,13 +11,6 @@ export class CoderzzxRoles {
   @Column('varchar', { name: 'role_menus', comment: '角色菜单', length: 255 })
   roleMenus: string;
 
-  @Column('varchar', {
-    name: 'role_permissions',
-    comment: '操作权限',
-    length: 255,
-  })
-  rolePermissions: string;
-
   @Column('tinyint', {
     name: 'status',
     comment: '状态：0:失效，1:启用',

@@ -9,7 +9,6 @@ interface RoleInfo {
   id: number;
   roleName: string;
   roleMenus: number[];
-  rolePermissions: string;
   status: number;
   createTime: string;
   updateTime: string;
