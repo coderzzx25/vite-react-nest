@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CoderzzxRoles } from '../entities/roles.entity';
 import { ICreateRoleService, ISelectRoleBody, IUpdateRoleService } from './roles.interface';
 
@@ -56,6 +56,16 @@ export class RolesService {
   async updateRoleService(roleInfo: IUpdateRoleService) {
     const { id } = roleInfo;
     const result = await this.rolesRepository.update(id, roleInfo);
+    return result;
+  }
+
+  async getRoleByIdsService(roleIds: number[]): Promise<CoderzzxRoles[]> {
+    const result = await this.rolesRepository.find({ where: { id: In(roleIds) } });
+    return result;
+  }
+
+  async getAllRoleListService(): Promise<CoderzzxRoles[]> {
+    const result = await this.rolesRepository.find({ where: { status: 1 } });
     return result;
   }
 }

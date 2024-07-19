@@ -13,3 +13,7 @@ export const ApiCreateRoleOperation = () => {
 export const ApiUpdateRoleOperation = () => {
   return applyDecorators(ApiBearerAuth(), UseGuards(AuthGuard), HttpCode(200), Post('update-role'));
 };
+
+export const ApiAllRoleListOperation = () => {
+  return applyDecorators(ApiBearerAuth(), UseGuards(AuthGuard), Get('all-role-list'));
+};

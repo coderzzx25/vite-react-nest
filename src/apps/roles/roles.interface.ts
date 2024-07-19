@@ -5,7 +5,7 @@ export interface ISelectRoleBody {
   status?: number;
 }
 
-interface RoleInfo {
+export interface RoleInfo {
   id: number;
   roleName: string;
   roleMenus: number[];

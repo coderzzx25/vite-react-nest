@@ -1,7 +1,12 @@
-import { Controller, Query, HttpException, HttpStatus, Param, Body } from '@nestjs/common';
+import { Controller, Query, HttpException, HttpStatus, Body } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiRoleListOperation, ApiCreateRoleOperation, ApiUpdateRoleOperation } from './roles.decorators';
+import {
+  ApiRoleListOperation,
+  ApiCreateRoleOperation,
+  ApiUpdateRoleOperation,
+  ApiAllRoleListOperation,
+} from './roles.decorators';
 import {
   ISelectRoleBody,
   ISelectRoleData,
@@ -9,6 +14,7 @@ import {
   ICreateRoleService,
   IUpdateRoleBody,
   IUpdateRoleService,
+  RoleInfo,
 } from './roles.interface';
 import { timestampToDate, getTimestamp } from '../../utils/datetime';
 import { MenusService } from '../menus/menus.service';
@@ -135,5 +141,22 @@ export class RolesController {
     } catch (error) {
       throw new HttpException('更新失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  @ApiAllRoleListOperation()
+  async getAllRoleList(): Promise<RoleInfo[]> {
+    const roleList = await this.rolesService.getAllRoleListService();
+    const newData = roleList.map((item) => {
+      return {
+        id: item.id,
+        roleName: item.roleName,
+        roleMenus: item.roleMenus.split(',').map(Number),
+        status: item.status,
+        createTime: timestampToDate(item.createTime),
+        updateTime: timestampToDate(item.updateTime),
+      };
+    });
+
+    return newData;
   }
 }
