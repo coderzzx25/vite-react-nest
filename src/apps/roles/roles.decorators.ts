@@ -3,7 +3,40 @@ import { AuthGuard } from '../auths/auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery, ApiBody, ApiParam } from '@nestjs/swagger';
 
 export const ApiRoleListOperation = () => {
-  return applyDecorators(ApiBearerAuth(), UseGuards(AuthGuard), Get('role-list'));
+  return applyDecorators(
+    ApiBearerAuth(),
+    UseGuards(AuthGuard),
+    ApiOperation({ summary: '角色列表' }),
+    Get('role-list'),
+    ApiQuery({ name: 'page', type: Number, required: true }),
+    ApiQuery({ name: 'size', type: Number, required: true }),
+    ApiQuery({ name: 'roleName', type: String, required: false }),
+    ApiQuery({ name: 'status', type: Number, required: false, enum: [0, 1], example: 1 }),
+    ApiResponse({
+      status: 200,
+      description: '成功',
+      schema: {
+        type: 'object',
+        properties: {
+          total: { type: 'number' },
+          data: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                roleName: { type: 'string' },
+                roleMenus: { type: 'array', items: { type: 'number' } },
+                status: { type: 'number' },
+                createTime: { type: 'string' },
+                updateTime: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
+    }),
+  );
 };
 
 export const ApiCreateRoleOperation = () => {

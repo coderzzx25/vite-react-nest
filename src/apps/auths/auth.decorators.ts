@@ -5,6 +5,8 @@ import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 export const ApiAccountLoginOperation = () => {
   return applyDecorators(
     ApiOperation({ summary: '账号登录' }),
+    Post('account-login'),
+    HttpCode(200),
     ApiBody({
       schema: {
         type: 'object',
@@ -45,7 +47,5 @@ export const ApiAccountLoginOperation = () => {
         },
       },
     }),
-    Post('account-login'),
-    HttpCode(200),
   );
 };

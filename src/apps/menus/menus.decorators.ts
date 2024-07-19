@@ -7,6 +7,8 @@ export const ApiMenuListOperation = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({ summary: '菜单列表' }),
+    UseGuards(AuthGuard),
+    Get('menu-list'),
     ApiQuery({ name: 'page', description: '页码', required: true, type: Number }),
     ApiQuery({ name: 'size', description: '每页数量', required: true, type: Number }),
     ApiQuery({ name: 'menuName', description: '菜单名称', required: false, type: String }),
@@ -76,8 +78,6 @@ export const ApiMenuListOperation = () => {
         },
       },
     }),
-    UseGuards(AuthGuard),
-    Get('menu-list'),
   );
 };
 
@@ -85,6 +85,9 @@ export const ApiCreateMenuOperation = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({ summary: '创建菜单' }),
+    UseGuards(AuthGuard),
+    HttpCode(200),
+    Post('create-menu'),
     ApiBody({
       schema: {
         type: 'object',
@@ -128,9 +131,6 @@ export const ApiCreateMenuOperation = () => {
         },
       },
     }),
-    UseGuards(AuthGuard),
-    HttpCode(200),
-    Post('create-menu'),
   );
 };
 
@@ -138,6 +138,9 @@ export const ApiUpdateMenuOperation = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({ summary: '编辑菜单' }),
+    UseGuards(AuthGuard),
+    HttpCode(200),
+    Post('update-menu'),
     ApiBody({
       schema: {
         type: 'object',
@@ -193,9 +196,6 @@ export const ApiUpdateMenuOperation = () => {
         },
       },
     }),
-    UseGuards(AuthGuard),
-    HttpCode(200),
-    Post('update-menu'),
   );
 };
 
@@ -203,6 +203,8 @@ export const ApiUserMenuListOperation = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({ summary: '角色菜单' }),
+    UseGuards(AuthGuard),
+    Get('user-menu/:roleId'),
     ApiParam({ name: 'roleId', description: '角色ID', required: true, type: Number }),
     ApiResponse({
       status: 200,
@@ -268,8 +270,6 @@ export const ApiUserMenuListOperation = () => {
         },
       },
     }),
-    UseGuards(AuthGuard),
-    Get('user-menu/:roleId'),
   );
 };
 
@@ -277,6 +277,8 @@ export const ApiAllMenuListOperation = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({ summary: '所有菜单列表' }),
+    UseGuards(AuthGuard),
+    Get('all-menu-list'),
     ApiResponse({
       status: 200,
       description: '成功',
@@ -319,7 +321,5 @@ export const ApiAllMenuListOperation = () => {
         },
       },
     }),
-    UseGuards(AuthGuard),
-    Get('all-menu-list'),
   );
 };

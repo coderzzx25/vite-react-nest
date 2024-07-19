@@ -4,7 +4,6 @@ import { CoderzzxMenus } from '../entities/menus.entity';
 import { Repository } from 'typeorm';
 import { ISelectMenuParams, ICreateMenuBody, IUpdateMenuBody } from './menus.interface';
 import { In } from 'typeorm';
-import { async } from 'rxjs';
 
 @Injectable()
 export class MenusService {
