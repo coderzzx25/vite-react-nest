@@ -56,4 +56,37 @@ export class AuthsController {
 
     return data;
   }
+
+  // 刷新 token
+  @Post('refresh-token')
+  @HttpCode(200)
+  async refreshToken(@Body() body: { refreshToken: string }): Promise<{ accessToken: string; refreshToken: string }> {
+    const { refreshToken } = body;
+
+    if (!refreshToken) {
+      throw new HttpException('refreshToken 不能为空', HttpStatus.BAD_REQUEST);
+    }
+
+    // 验证 refreshToken
+    let payload;
+    try {
+      payload = await this.jwtService.verifyAsync(refreshToken);
+    } catch (error) {
+      throw new HttpException('refreshToken 无效', HttpStatus.BAD_REQUEST);
+    }
+
+    const { exp, iat, ...newPayload } = payload;
+    // 生成新的 accessToken
+    const newAccessToken = await this.jwtService.signAsync(newPayload);
+    const newRefreshToken = await this.jwtService.signAsync(newPayload, {
+      expiresIn: '7d',
+    });
+
+    const data = {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
+
+    return data;
+  }
 }
