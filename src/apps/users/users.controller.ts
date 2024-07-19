@@ -1,13 +1,11 @@
-import { Controller, Query, HttpException, HttpStatus, Body } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Query, HttpException, HttpStatus, Body, UseGuards, Post, Get, HttpCode } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiUserListOperation, ApiCreateUserOperation, ApiUpdateUserOperation } from './users.decorators';
 import { ISelectUserBody, ISelectUserData, IUserInfo, ICreateUserBody, IUpdateUserBody } from './users.interface';
 import { timestampToDate, getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 import { RoleInfo } from '../roles/roles.interface';
+import { AuthGuard } from '../auths/auth.guard';
 
-@ApiTags('用户模块')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -15,7 +13,8 @@ export class UsersController {
     private readonly rolesService: RolesService,
   ) {}
 
-  @ApiUserListOperation()
+  @UseGuards(AuthGuard)
+  @Get('user-list')
   async getUserList(
     @Query('page') page: number,
     @Query('size') size: number,
@@ -74,7 +73,9 @@ export class UsersController {
     };
   }
 
-  @ApiCreateUserOperation()
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('create-user')
   async createUser(@Body() createUserBody: ICreateUserBody) {
     const { userName, userNick, userHead, userRole, status } = createUserBody;
 
@@ -106,7 +107,9 @@ export class UsersController {
     }
   }
 
-  @ApiUpdateUserOperation()
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('update-user')
   async updateUser(@Body() updateUserBody: IUpdateUserBody) {
     const { id, userName, userNick, userHead, userRole, status } = updateUserBody;
 

@@ -1,7 +1,18 @@
-import { Controller, Query, Body, HttpException, HttpStatus, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Query,
+  Body,
+  HttpException,
+  HttpStatus,
+  Param,
+  UseGuards,
+  Get,
+  HttpCode,
+  Post,
+} from '@nestjs/common';
 import { MenusService } from './menus.service';
 import { mapMenusToRoutes } from '../../utils/map-menus';
+import { AuthGuard } from '../auths/auth.guard';
 import {
   ISelectMenuParams,
   ISelectMenuResponseData,
@@ -9,17 +20,9 @@ import {
   IUpdateMenuBody,
   IMenuInfo,
 } from './menus.interface';
-import {
-  ApiMenuListOperation,
-  ApiCreateMenuOperation,
-  ApiUpdateMenuOperation,
-  ApiUserMenuListOperation,
-  ApiAllMenuListOperation,
-} from './menus.decorators';
 import { getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 
-@ApiTags('菜单模块')
 @Controller('menus')
 export class MenusController {
   constructor(
@@ -27,7 +30,8 @@ export class MenusController {
     private readonly rolesService: RolesService,
   ) {}
 
-  @ApiMenuListOperation()
+  @UseGuards(AuthGuard)
+  @Get('menu-list')
   async getMenuList(
     @Query('page') page: number,
     @Query('size') size: number,
@@ -55,7 +59,9 @@ export class MenusController {
     };
   }
 
-  @ApiCreateMenuOperation()
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('create-menu')
   async createMenu(@Body() createMenuInfo: ICreateMenuBody): Promise<string> {
     const { menuName, menuIcon, menuUrl, menuPid, status } = createMenuInfo;
 
@@ -91,7 +97,9 @@ export class MenusController {
     }
   }
 
-  @ApiUpdateMenuOperation()
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('update-menu')
   async updateMenu(@Body() updateMenuInfo: IUpdateMenuBody): Promise<string> {
     const { id, menuName, menuIcon, menuUrl, menuPid, status } = updateMenuInfo;
 
@@ -150,7 +158,8 @@ export class MenusController {
     }
   }
 
-  @ApiUserMenuListOperation()
+  @UseGuards(AuthGuard)
+  @Get('user-menu/:roleId')
   async getUserMenuList(@Param('roleId') role_id: number): Promise<IMenuInfo[]> {
     if (!role_id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
@@ -168,7 +177,8 @@ export class MenusController {
     return mapMenusToRoutes(menuList);
   }
 
-  @ApiAllMenuListOperation()
+  @UseGuards(AuthGuard)
+  @Get('all-menu-list')
   async getAllMenuList(): Promise<IMenuInfo[]> {
     const menuList = await this.menusService.getAllMenuListService();
     return mapMenusToRoutes(menuList);

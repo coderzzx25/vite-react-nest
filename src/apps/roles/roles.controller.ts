@@ -1,12 +1,6 @@
-import { Controller, Query, HttpException, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Query, HttpException, HttpStatus, Body, UseGuards, Get, HttpCode, Post } from '@nestjs/common';
+import { AuthGuard } from '../auths/auth.guard';
 import { RolesService } from './roles.service';
-import { ApiTags } from '@nestjs/swagger';
-import {
-  ApiRoleListOperation,
-  ApiCreateRoleOperation,
-  ApiUpdateRoleOperation,
-  ApiAllRoleListOperation,
-} from './roles.decorators';
 import {
   ISelectRoleBody,
   ISelectRoleData,
@@ -19,7 +13,6 @@ import {
 import { timestampToDate, getTimestamp } from '../../utils/datetime';
 import { MenusService } from '../menus/menus.service';
 
-@ApiTags('角色模块')
 @Controller('roles')
 export class RolesController {
   constructor(
@@ -27,7 +20,8 @@ export class RolesController {
     private readonly menusService: MenusService,
   ) {}
 
-  @ApiRoleListOperation()
+  @UseGuards(AuthGuard)
+  @Get('role-list')
   async getRoleList(
     @Query('page') page: number,
     @Query('size') size: number,
@@ -66,7 +60,9 @@ export class RolesController {
     };
   }
 
-  @ApiCreateRoleOperation()
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('create-role')
   async createRole(@Body() createRoleBody: ICreateRoleBody): Promise<string> {
     const { roleName, roleMenus, status } = createRoleBody;
 
@@ -98,7 +94,9 @@ export class RolesController {
     }
   }
 
-  @ApiUpdateRoleOperation()
+  @UseGuards(AuthGuard)
+  @HttpCode(200)
+  @Post('update-role')
   async updateRole(@Body() updateRoleBody: IUpdateRoleBody) {
     const { id, roleName, roleMenus, status } = updateRoleBody;
 
@@ -143,7 +141,8 @@ export class RolesController {
     }
   }
 
-  @ApiAllRoleListOperation()
+  @UseGuards(AuthGuard)
+  @Get('all-role-list')
   async getAllRoleList(): Promise<RoleInfo[]> {
     const roleList = await this.rolesService.getAllRoleListService();
     const newData = roleList.map((item) => {

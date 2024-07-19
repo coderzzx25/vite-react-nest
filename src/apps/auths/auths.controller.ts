@@ -1,12 +1,9 @@
-import { Controller, Body, HttpException, HttpStatus } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Body, HttpException, HttpStatus, Post, HttpCode } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthsService } from './auths.service';
 import { UsersService } from '../users/users.service';
 import { IAccountLoginBody, IAccountLoginResponseData } from './auths.interface';
-import { ApiAccountLoginOperation } from './auth.decorators';
 
-@ApiTags('认证模块')
 @Controller('auths')
 export class AuthsController {
   constructor(
@@ -15,7 +12,8 @@ export class AuthsController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @ApiAccountLoginOperation()
+  @Post('account-login')
+  @HttpCode(200)
   async accountLogin(@Body() body: IAccountLoginBody): Promise<IAccountLoginResponseData> {
     const { userName, userPassword } = body;
 
