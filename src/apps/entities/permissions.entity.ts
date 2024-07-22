@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('coderzzx_menus', { schema: 'coderzzx_django' })
-export class CoderzzxMenus {
+@Entity('coderzzx_permissions', { schema: 'coderzzx_django' })
+export class CoderzzxPermissions {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', comment: 'ID' })
   id: number;
 
@@ -16,6 +16,9 @@ export class CoderzzxMenus {
 
   @Column('int', { name: 'menu_pid', comment: '父菜单', default: () => "'0'" })
   menuPid: number;
+
+  @Column('tinyint', { name: 'permission_type', comment: '权限类型,1:页面,2:操作', width: 1, default: () => "'1'" })
+  permissionType: number;
 
   @Column('tinyint', {
     name: 'status',

@@ -13,7 +13,7 @@ const typeorm: TypeOrmModuleAsyncOptions = {
     database: ConfigService.get<string>('NEST_MYSQL_DATABASE'), // 数据库名称
     charset: 'utf8mb4', // 字符集
     entities: [__dirname + '/../**/*.entity{.ts,.js}'], // 实体文件路径
-    synchronize: false, // 是否自动同步数据库表结构
+    synchronize: true, // 是否自动同步数据库表结构
   }),
 };
 

@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './apps/users/users.module';
 import { RolesModule } from './apps/roles/roles.module';
-import { MenusModule } from './apps/menus/menus.module';
+import { MenusModule } from './apps/permissions/permissions.module';
 import { AuthsModule } from './apps/auths/auths.module';
 
 import configModel from './libs/env.config';

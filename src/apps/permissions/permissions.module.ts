@@ -1,12 +1,12 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { MenusService } from './menus.service';
-import { MenusController } from './menus.controller';
+import { MenusService } from './permissions.service';
+import { MenusController } from './permissions.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CoderzzxMenus } from '../entities/menus.entity';
+import { CoderzzxPermissions } from '../entities/permissions.entity';
 import { RolesModule } from '../roles/roles.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CoderzzxMenus]), forwardRef(() => RolesModule)],
+  imports: [TypeOrmModule.forFeature([CoderzzxPermissions]), forwardRef(() => RolesModule)],
   controllers: [MenusController],
   providers: [MenusService],
   exports: [MenusService],

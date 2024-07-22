@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CoderzzxMenus } from '../entities/menus.entity';
+import { CoderzzxPermissions } from '../entities/permissions.entity';
 import { Repository } from 'typeorm';
-import { ISelectMenuParams, ICreateMenuBody, IUpdateMenuBody } from './menus.interface';
+import { ISelectMenuParams, ICreateMenuBody, IUpdateMenuBody } from './permissions.interface';
 import { In } from 'typeorm';
 
 @Injectable()
 export class MenusService {
   constructor(
-    @InjectRepository(CoderzzxMenus)
-    private readonly menusRepository: Repository<CoderzzxMenus>,
+    @InjectRepository(CoderzzxPermissions)
+    private readonly menusRepository: Repository<CoderzzxPermissions>,
   ) {}
 
-  async getMenuListService(selectInfo: ISelectMenuParams): Promise<{ data: CoderzzxMenus[]; total: number }> {
+  async getMenuListService(selectInfo: ISelectMenuParams): Promise<{ data: CoderzzxPermissions[]; total: number }> {
     const { page, size, menuName, status } = selectInfo;
     const menuQuery = this.menusRepository.createQueryBuilder('menus');
     if (menuName) {
@@ -42,7 +42,7 @@ export class MenusService {
    * @param menuName 菜单名称
    * @returns 菜单信息
    */
-  async getMenuByNameService(menuName: string): Promise<CoderzzxMenus | null> {
+  async getMenuByNameService(menuName: string): Promise<CoderzzxPermissions | null> {
     const result = await this.menusRepository.findOne({ where: { menuName } });
     return result;
   }
@@ -52,7 +52,7 @@ export class MenusService {
    * @param menuPid 父级ID
    * @returns 菜单信息
    */
-  async getMenuByPidService(menuPid: number): Promise<CoderzzxMenus | null> {
+  async getMenuByPidService(menuPid: number): Promise<CoderzzxPermissions | null> {
     const result = await this.menusRepository.findOne({ where: { menuPid } });
     return result;
   }
@@ -62,7 +62,7 @@ export class MenusService {
    * @param id 菜单ID
    * @returns 菜单信息
    */
-  async getMenuByIdService(id: number): Promise<CoderzzxMenus | null> {
+  async getMenuByIdService(id: number): Promise<CoderzzxPermissions | null> {
     const result = await this.menusRepository.findOne({ where: { id } });
     return result;
   }
@@ -93,7 +93,7 @@ export class MenusService {
    * @param ids 菜单ID列表
    * @returns 菜单列表
    */
-  async getMenuListByIdsService(ids: number[]): Promise<CoderzzxMenus[]> {
+  async getMenuListByIdsService(ids: number[]): Promise<CoderzzxPermissions[]> {
     const result = await this.menusRepository.find({ where: { id: In(ids) } });
     return result;
   }
@@ -102,7 +102,7 @@ export class MenusService {
    * 查询所有菜单
    * @returns 菜单列表
    */
-  async getAllMenuListService(): Promise<CoderzzxMenus[]> {
+  async getAllMenuListService(): Promise<CoderzzxPermissions[]> {
     const result = await this.menusRepository.find();
     return result;
   }

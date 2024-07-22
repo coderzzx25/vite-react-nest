@@ -10,7 +10,7 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common';
-import { MenusService } from './menus.service';
+import { MenusService } from './permissions.service';
 import { mapMenusToRoutes } from '../../utils/map-menus';
 import { AuthGuard } from '../auths/auth.guard';
 import {
@@ -19,7 +19,7 @@ import {
   ICreateMenuBody,
   IUpdateMenuBody,
   IMenuInfo,
-} from './menus.interface';
+} from './permissions.interface';
 import { getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 

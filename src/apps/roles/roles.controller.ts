@@ -11,7 +11,7 @@ import {
   RoleInfo,
 } from './roles.interface';
 import { timestampToDate, getTimestamp } from '../../utils/datetime';
-import { MenusService } from '../menus/menus.service';
+import { MenusService } from '../permissions/permissions.service';
 
 @Controller('roles')
 export class RolesController {
