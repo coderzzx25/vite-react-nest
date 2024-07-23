@@ -9,6 +9,10 @@ export interface RoleInfo {
   id: number;
   roleName: string;
   rolePermissions: number[];
+  permissionInfo?: {
+    id: number;
+    permissionName: string;
+  }[];
   status: number;
   createTime: string;
   updateTime: string;

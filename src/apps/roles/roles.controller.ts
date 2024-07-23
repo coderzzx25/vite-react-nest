@@ -43,11 +43,26 @@ export class RolesController {
 
     const { data, total } = await this.rolesService.getRoleListService(selectInfo);
 
+    const permissionArr = data
+      .map((item) => item.rolePermissions.split(','))
+      .flat()
+      .map(Number);
+
+    const permissionList = await this.permissionService.getPermissionByIdsService(permissionArr);
+
     const newData = data.map((item) => {
       return {
         id: item.id,
         roleName: item.roleName,
         rolePermissions: item.rolePermissions.split(',').map(Number),
+        permissionInfo: permissionList
+          .filter((permission) => item.rolePermissions.split(',').includes(String(permission.id)))
+          .map((permission) => {
+            return {
+              id: permission.id,
+              permissionName: permission.permissionName,
+            };
+          }),
         status: item.status,
         createTime: timestampToDate(item.createTime),
         updateTime: timestampToDate(item.updateTime),

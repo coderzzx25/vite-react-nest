@@ -106,4 +106,9 @@ export class PermissionsService {
     const result = await this.permissionsRepository.find();
     return result;
   }
+
+  async getPermissionByIdsService(ids: number[]): Promise<Permissions[]> {
+    const result = await this.permissionsRepository.find({ where: { id: In(ids) } });
+    return result;
+  }
 }
