@@ -1,21 +1,21 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('coderzzx_users', { schema: 'coderzzx_django' })
-export class CoderzzxUsers {
+@Entity('users', { schema: 'coderzzx' })
+export class Users {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', comment: 'ID' })
   id: number;
 
-  @Column('varchar', { name: 'user_name', comment: '账户', length: 50 })
-  userName: string;
+  @Column('varchar', { name: 'user_account', comment: '账户', length: 50 })
+  userAccount: string;
 
   @Column('varchar', { name: 'user_password', comment: '密码', length: 100 })
   userPassword: string;
 
-  @Column('varchar', { name: 'user_head', comment: '头像', length: 100 })
-  userHead: string;
+  @Column('varchar', { name: 'user_avatar', comment: '头像', length: 100 })
+  userAvatar: string;
 
-  @Column('varchar', { name: 'user_nick', comment: '别名', length: 20 })
-  userNick: string;
+  @Column('varchar', { name: 'user_name', comment: '姓名', length: 20 })
+  userName: string;
 
   @Column('tinyint', {
     name: 'user_role',

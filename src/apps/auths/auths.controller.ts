@@ -15,13 +15,13 @@ export class AuthsController {
   @Post('account-login')
   @HttpCode(200)
   async accountLogin(@Body() body: IAccountLoginBody): Promise<IAccountLoginResponseData> {
-    const { userName, userPassword } = body;
+    const { userAccount, userPassword } = body;
 
-    if (!userName || !userPassword) {
+    if (!userAccount || !userPassword) {
       throw new HttpException('账户名或密码不能为空', HttpStatus.BAD_REQUEST);
     }
 
-    const userInfo = await this.usersService.getUserInfoByUserName(userName);
+    const userInfo = await this.usersService.getUserInfoByUserAccount(userAccount);
 
     if (!userInfo) {
       throw new HttpException('账户名不存在', HttpStatus.BAD_REQUEST);
@@ -33,9 +33,9 @@ export class AuthsController {
 
     // 生成 token
     const payload = {
+      userAccount: userInfo.userAccount,
       userName: userInfo.userName,
-      userNickName: userInfo.userNick,
-      userHead: userInfo.userHead,
+      userAvatar: userInfo.userAvatar,
       roleId: userInfo.userRole,
     };
     const accessToken = await this.jwtService.signAsync(payload);
@@ -45,9 +45,9 @@ export class AuthsController {
 
     const data = {
       userInfo: {
+        userAccount: userInfo.userAccount,
         userName: userInfo.userName,
-        userNickName: userInfo.userNick,
-        userHead: userInfo.userHead,
+        userAvatar: userInfo.userAvatar,
         roleId: userInfo.userRole,
       },
       accessToken: accessToken,

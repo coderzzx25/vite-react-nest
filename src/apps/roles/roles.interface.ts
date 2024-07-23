@@ -8,7 +8,7 @@ export interface ISelectRoleBody {
 export interface RoleInfo {
   id: number;
   roleName: string;
-  roleMenus: number[];
+  rolePermissions: number[];
   status: number;
   createTime: string;
   updateTime: string;
@@ -21,7 +21,7 @@ export interface ISelectRoleData {
 
 export interface ICreateRoleBody {
   roleName: string;
-  roleMenus: number[];
+  rolePermissions: number[];
   status: number;
   createTime?: number;
   updateTime?: number;
@@ -29,7 +29,7 @@ export interface ICreateRoleBody {
 
 export interface ICreateRoleService {
   roleName: string;
-  roleMenus: string;
+  rolePermissions: string;
   status: number;
   createTime?: number;
   updateTime?: number;
@@ -38,7 +38,7 @@ export interface ICreateRoleService {
 export interface IUpdateRoleBody {
   id: number;
   roleName?: string;
-  roleMenus?: number[];
+  rolePermissions?: number[];
   status?: number;
   updateTime?: number;
 }
@@ -46,7 +46,7 @@ export interface IUpdateRoleBody {
 export interface IUpdateRoleService {
   id: number;
   roleName?: string;
-  roleMenus?: string;
+  rolePermissions?: string;
   status?: number;
   updateTime?: number;
 }

@@ -10,88 +10,96 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common';
-import { MenusService } from './permissions.service';
-import { mapMenusToRoutes } from '../../utils/map-menus';
+import { PermissionsService } from './permissions.service';
+import { mapPermissionToRoutes } from '../../utils/map-menus';
 import { AuthGuard } from '../auths/auth.guard';
 import {
-  ISelectMenuParams,
-  ISelectMenuResponseData,
-  ICreateMenuBody,
-  IUpdateMenuBody,
-  IMenuInfo,
+  ISelectPermissionParams,
+  ISelectPermissionResponseData,
+  ICreatePermissionBody,
+  IUpdatePermissionBody,
+  IPermissionInfo,
 } from './permissions.interface';
 import { getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 
-@Controller('menus')
-export class MenusController {
+@Controller('permissions')
+export class PermissionController {
   constructor(
-    private readonly menusService: MenusService,
+    private readonly permissionService: PermissionsService,
     private readonly rolesService: RolesService,
   ) {}
 
   @UseGuards(AuthGuard)
-  @Get('menu-list')
-  async getMenuList(
+  @Get('permission-list')
+  async getPermissionList(
     @Query('page') page: number,
     @Query('size') size: number,
-    @Query('menuName') menuName?: string,
+    @Query('permissionName') permissionName?: string,
     @Query('status') status?: number,
-  ): Promise<ISelectMenuResponseData> {
+  ): Promise<ISelectPermissionResponseData> {
     if (!page || !size) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
-    const selectInfo: ISelectMenuParams = {
+    const selectInfo: ISelectPermissionParams = {
       page,
       size,
     };
 
-    if (menuName) selectInfo.menuName = menuName;
+    if (permissionName) selectInfo.permissionName = permissionName;
 
     if (status) selectInfo.status = status;
 
-    const { data, total } = await this.menusService.getMenuListService(selectInfo);
+    const { data, total } = await this.permissionService.getPermissionListService(selectInfo);
 
     return {
       total,
-      data: mapMenusToRoutes(data),
+      data: mapPermissionToRoutes(data),
     };
   }
 
   @UseGuards(AuthGuard)
   @HttpCode(200)
-  @Post('create-menu')
-  async createMenu(@Body() createMenuInfo: ICreateMenuBody): Promise<string> {
-    const { menuName, menuIcon, menuUrl, menuPid, status } = createMenuInfo;
+  @Post('create-permission')
+  async createPermission(@Body() createPermissionInfo: ICreatePermissionBody): Promise<string> {
+    const { permissionName, permissionIcon, permissionUrl, permissionPid, permissionType, status } =
+      createPermissionInfo;
 
-    if (!menuName || !menuIcon || !menuUrl || menuPid === undefined || status === undefined) {
+    if (
+      !permissionName ||
+      !permissionIcon ||
+      !permissionUrl ||
+      permissionPid === undefined ||
+      permissionType === undefined ||
+      status === undefined
+    ) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
     // 校验菜单名称是否重复
-    const menuInfo = await this.menusService.getMenuByNameService(menuName);
+    const permissionInfo = await this.permissionService.getPermissionByNameService(permissionName);
 
-    if (menuInfo) {
+    if (permissionInfo) {
       throw new HttpException('菜单名称重复', HttpStatus.BAD_REQUEST);
     }
 
     // 校验父级菜单是否存在
-    if (menuPid !== 0) {
-      const parentMenu = await this.menusService.getMenuByPidService(menuPid);
+    if (permissionPid !== 0) {
+      const parentMenu = await this.permissionService.getPermissionByIdService(permissionPid);
 
       if (!parentMenu) {
         throw new HttpException('父级菜单不存在', HttpStatus.BAD_REQUEST);
       }
     }
 
-    createMenuInfo.createTime = getTimestamp();
-    createMenuInfo.updateTime = getTimestamp();
+    createPermissionInfo.createTime = getTimestamp();
+    createPermissionInfo.updateTime = getTimestamp();
 
     // 创建菜单
     try {
-      await this.menusService.createMenuService(createMenuInfo);
-      return '创建菜单成功';
+      await this.permissionService.createPermissionService(createPermissionInfo);
+      return '创建成功';
     } catch (error) {
       throw new HttpException('创建菜单失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -99,43 +107,43 @@ export class MenusController {
 
   @UseGuards(AuthGuard)
   @HttpCode(200)
-  @Post('update-menu')
-  async updateMenu(@Body() updateMenuInfo: IUpdateMenuBody): Promise<string> {
-    const { id, menuName, menuIcon, menuUrl, menuPid, status } = updateMenuInfo;
+  @Post('update-permission')
+  async updateMenu(@Body() updatePermissionInfo: IUpdatePermissionBody): Promise<string> {
+    const { id, permissionName, permissionUrl, permissionIcon, permissionPid, status } = updatePermissionInfo;
 
     if (!id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
     // 校验菜单是否存在
-    const menuInfo = await this.menusService.getMenuByIdService(id);
+    const permissionInfo = await this.permissionService.getPermissionByIdService(id);
 
-    if (!menuInfo) {
+    if (!permissionInfo) {
       throw new HttpException('菜单不存在', HttpStatus.BAD_REQUEST);
     }
 
-    const updateInfo: IUpdateMenuBody = {
+    const updateInfo: IUpdatePermissionBody = {
       id,
     };
 
-    if (menuName) {
-      const menuInfo = await this.menusService.getMenuByNameService(menuName);
+    if (permissionName) {
+      const permissionInfo = await this.permissionService.getPermissionByNameService(permissionName);
 
-      if (menuInfo && menuInfo.id !== id) throw new HttpException('菜单名称重复', HttpStatus.BAD_REQUEST);
+      if (permissionInfo && permissionInfo.id !== id) throw new HttpException('菜单名称重复', HttpStatus.BAD_REQUEST);
 
-      updateInfo.menuName = menuName;
+      updateInfo.permissionName = permissionName;
     }
 
-    if (menuIcon) updateInfo.menuIcon = menuIcon;
+    if (permissionIcon) updateInfo.permissionIcon = permissionIcon;
 
-    if (menuUrl) updateInfo.menuUrl = menuUrl;
+    if (permissionUrl) updateInfo.permissionUrl = permissionUrl;
 
-    if (menuPid && menuPid !== 0) {
-      const parentMenu = await this.menusService.getMenuByPidService(menuPid);
+    if (permissionPid && permissionPid !== 0) {
+      const parentMenu = await this.permissionService.getPermissionByPidService(permissionPid);
 
       if (!parentMenu) {
         throw new HttpException('父级菜单不存在', HttpStatus.BAD_REQUEST);
       }
 
-      updateInfo.menuPid = menuPid;
+      updateInfo.permissionPid = permissionPid;
     }
 
     if (status !== undefined) updateInfo.status = status;
@@ -151,16 +159,16 @@ export class MenusController {
 
     // 更新菜单
     try {
-      await this.menusService.updateMenuService(updateInfo);
-      return '更新菜单成功';
+      await this.permissionService.updatePermissionService(updateInfo);
+      return '更新成功';
     } catch (error) {
-      throw new HttpException('更新菜单失败', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('更新失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @UseGuards(AuthGuard)
-  @Get('user-menu/:roleId')
-  async getUserMenuList(@Param('roleId') role_id: number): Promise<IMenuInfo[]> {
+  @Get('user-permissions/:roleId')
+  async getUserPermissionList(@Param('roleId') role_id: number): Promise<IPermissionInfo[]> {
     if (!role_id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
     // 校验角色是否存在
@@ -168,19 +176,19 @@ export class MenusController {
 
     if (!roleInfo) throw new HttpException('角色不存在', HttpStatus.BAD_REQUEST);
 
-    const { roleMenus } = roleInfo;
+    const { rolePermissions } = roleInfo;
 
-    const roleArray = roleMenus.split(',').map(Number);
+    const roleArray = rolePermissions.split(',').map(Number);
 
-    const menuList = await this.menusService.getMenuListByIdsService(roleArray);
+    const permissionList = await this.permissionService.getPermissionListByIdsService(roleArray);
 
-    return mapMenusToRoutes(menuList);
+    return mapPermissionToRoutes(permissionList);
   }
 
   @UseGuards(AuthGuard)
-  @Get('all-menu-list')
-  async getAllMenuList(): Promise<IMenuInfo[]> {
-    const menuList = await this.menusService.getAllMenuListService();
-    return mapMenusToRoutes(menuList);
+  @Get('all-permission-list')
+  async getAllPermissionList(): Promise<IPermissionInfo[]> {
+    const permissionList = await this.permissionService.getAllPermissionListService();
+    return mapPermissionToRoutes(permissionList);
   }
 }

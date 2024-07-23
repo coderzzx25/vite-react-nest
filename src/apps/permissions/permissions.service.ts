@@ -1,49 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CoderzzxPermissions } from '../entities/permissions.entity';
+import { Permissions } from '../entities/permissions.entity';
 import { Repository } from 'typeorm';
-import { ISelectMenuParams, ICreateMenuBody, IUpdateMenuBody } from './permissions.interface';
+import { ISelectPermissionParams, ICreatePermissionBody, IUpdatePermissionBody } from './permissions.interface';
 import { In } from 'typeorm';
 
 @Injectable()
-export class MenusService {
+export class PermissionsService {
   constructor(
-    @InjectRepository(CoderzzxPermissions)
-    private readonly menusRepository: Repository<CoderzzxPermissions>,
+    @InjectRepository(Permissions)
+    private readonly permissionsRepository: Repository<Permissions>,
   ) {}
 
-  async getMenuListService(selectInfo: ISelectMenuParams): Promise<{ data: CoderzzxPermissions[]; total: number }> {
-    const { page, size, menuName, status } = selectInfo;
-    const menuQuery = this.menusRepository.createQueryBuilder('menus');
-    if (menuName) {
-      menuQuery.andWhere('menus.menuName like :menuName', {
-        menuName: `%${menuName}%`,
+  async getPermissionListService(selectInfo: ISelectPermissionParams): Promise<{ data: Permissions[]; total: number }> {
+    const { page, size, permissionName, status } = selectInfo;
+    const menuQuery = this.permissionsRepository.createQueryBuilder('permissions');
+    if (permissionName) {
+      menuQuery.andWhere('permissions.permissionName like :permissionName', {
+        permissionName: `%${permissionName}%`,
       });
     }
 
     if (status) {
-      menuQuery.andWhere('menus.status = :status', { status });
+      menuQuery.andWhere('permissions.status = :status', { status });
     }
 
-    menuQuery.orderBy('menus.id', 'ASC');
+    menuQuery.orderBy('permissions.id', 'ASC');
     menuQuery.offset((page - 1) * size);
     menuQuery.limit(size);
 
-    const [menuList, total] = await menuQuery.getManyAndCount();
+    const [data, total] = await menuQuery.getManyAndCount();
 
     return {
-      data: menuList,
+      data,
       total,
     };
   }
 
   /**
    * 根据菜单名称获取菜单
-   * @param menuName 菜单名称
+   * @param permissionName 菜单名称
    * @returns 菜单信息
    */
-  async getMenuByNameService(menuName: string): Promise<CoderzzxPermissions | null> {
-    const result = await this.menusRepository.findOne({ where: { menuName } });
+  async getPermissionByNameService(permissionName: string): Promise<Permissions | null> {
+    const result = await this.permissionsRepository.findOne({ where: { permissionName } });
     return result;
   }
 
@@ -52,8 +52,8 @@ export class MenusService {
    * @param menuPid 父级ID
    * @returns 菜单信息
    */
-  async getMenuByPidService(menuPid: number): Promise<CoderzzxPermissions | null> {
-    const result = await this.menusRepository.findOne({ where: { menuPid } });
+  async getPermissionByPidService(permissionPid: number): Promise<Permissions | null> {
+    const result = await this.permissionsRepository.findOne({ where: { permissionPid } });
     return result;
   }
 
@@ -62,8 +62,8 @@ export class MenusService {
    * @param id 菜单ID
    * @returns 菜单信息
    */
-  async getMenuByIdService(id: number): Promise<CoderzzxPermissions | null> {
-    const result = await this.menusRepository.findOne({ where: { id } });
+  async getPermissionByIdService(id: number): Promise<Permissions | null> {
+    const result = await this.permissionsRepository.findOne({ where: { id } });
     return result;
   }
 
@@ -72,8 +72,8 @@ export class MenusService {
    * @param createInfo 菜单信息
    * @returns 创建结果
    */
-  async createMenuService(createInfo: ICreateMenuBody) {
-    const result = await this.menusRepository.save(createInfo);
+  async createPermissionService(createInfo: ICreatePermissionBody) {
+    const result = await this.permissionsRepository.save(createInfo);
     return result;
   }
 
@@ -82,9 +82,9 @@ export class MenusService {
    * @param updateInfo 菜单信息
    * @returns 更新结果
    */
-  async updateMenuService(updateInfo: IUpdateMenuBody) {
+  async updatePermissionService(updateInfo: IUpdatePermissionBody) {
     const { id } = updateInfo;
-    const result = await this.menusRepository.update(id, updateInfo);
+    const result = await this.permissionsRepository.update(id, updateInfo);
     return result;
   }
 
@@ -93,8 +93,8 @@ export class MenusService {
    * @param ids 菜单ID列表
    * @returns 菜单列表
    */
-  async getMenuListByIdsService(ids: number[]): Promise<CoderzzxPermissions[]> {
-    const result = await this.menusRepository.find({ where: { id: In(ids) } });
+  async getPermissionListByIdsService(ids: number[]): Promise<Permissions[]> {
+    const result = await this.permissionsRepository.find({ where: { id: In(ids) } });
     return result;
   }
 
@@ -102,8 +102,8 @@ export class MenusService {
    * 查询所有菜单
    * @returns 菜单列表
    */
-  async getAllMenuListService(): Promise<CoderzzxPermissions[]> {
-    const result = await this.menusRepository.find();
+  async getAllPermissionListService(): Promise<Permissions[]> {
+    const result = await this.permissionsRepository.find();
     return result;
   }
 }

@@ -1,15 +1,15 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('coderzzx_roles', { schema: 'coderzzx_django' })
-export class CoderzzxRoles {
+@Entity('roles', { schema: 'coderzzx' })
+export class Roles {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', comment: 'ID' })
   id: number;
 
   @Column('varchar', { name: 'role_name', comment: '角色名', length: 50 })
   roleName: string;
 
-  @Column('varchar', { name: 'role_menus', comment: '角色菜单', length: 255 })
-  roleMenus: string;
+  @Column('varchar', { name: 'role_permissions', comment: '角色菜单', length: 255 })
+  rolePermissions: string;
 
   @Column('tinyint', {
     name: 'status',

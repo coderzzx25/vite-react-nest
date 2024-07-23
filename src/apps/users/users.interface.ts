@@ -3,17 +3,17 @@ import { RoleInfo } from '../roles/roles.interface';
 export interface ISelectUserBody {
   page: number;
   size: number;
+  userAccount?: string;
   userName?: string;
-  userNick?: string;
   userRole?: number;
   status?: number;
 }
 
 export interface IUserInfo {
   id: number;
+  userAccount: string;
   userName: string;
-  userNick: string;
-  userHead: string;
+  userAvatar: string;
   userRole: RoleInfo;
   status: number;
   createTime: string;
@@ -26,10 +26,10 @@ export interface ISelectUserData {
 }
 
 export interface ICreateUserBody {
-  userName: string;
+  userAccount: string;
   userPassword: string;
-  userNick: string;
-  userHead: string;
+  userName: string;
+  userAvatar: string;
   userRole: number;
   status: number;
   createTime?: number;
@@ -38,9 +38,9 @@ export interface ICreateUserBody {
 
 export interface IUpdateUserBody {
   id: number;
+  userAccount?: string;
   userName?: string;
-  userNick?: string;
-  userHead?: string;
+  userAvatar?: string;
   userRole?: number;
   status?: number;
   updateTime?: number;

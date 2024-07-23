@@ -1,45 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CoderzzxUsers } from '../entities/users.entity';
+import { Users } from '../entities/users.entity';
 import { ICreateUserBody, ISelectUserBody, IUpdateUserBody } from './users.interface';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(CoderzzxUsers)
-    private readonly usersRepository: Repository<CoderzzxUsers>,
+    @InjectRepository(Users)
+    private readonly usersRepository: Repository<Users>,
   ) {}
 
-  async getUserInfoByUserName(userName: string): Promise<CoderzzxUsers | null> {
-    return await this.usersRepository.findOne({ where: { userName } });
+  async getUserInfoByUserAccount(userAccount: string): Promise<Users | null> {
+    return await this.usersRepository.findOne({ where: { userAccount } });
   }
 
-  async getUserListService(selectInfo: ISelectUserBody): Promise<{ data: CoderzzxUsers[]; total: number }> {
-    const { page, size, userName, userNick, userRole, status } = selectInfo;
+  async getUserListService(selectInfo: ISelectUserBody): Promise<{ data: Users[]; total: number }> {
+    const { page, size, userAccount, userName, userRole, status } = selectInfo;
 
     const userQuery = this.usersRepository
       .createQueryBuilder('users')
       .select([
         'users.id',
+        'users.userAccount',
         'users.userName',
-        'users.userNick',
-        'users.userHead',
+        'users.userAvatar',
         'users.userRole',
         'users.status',
         'users.createTime',
         'users.updateTime',
       ]);
 
-    if (userName) {
-      userQuery.andWhere('users.userName like :userName', {
-        userName: `%${userName}%`,
+    if (userAccount) {
+      userQuery.andWhere('users.userAccount like :userAccount', {
+        userAccount: `%${userAccount}%`,
       });
     }
 
-    if (userNick) {
-      userQuery.andWhere('users.userNick like :userNick', {
-        userNick: `%${userNick}%`,
+    if (userName) {
+      userQuery.andWhere('users.userName like :userName', {
+        userName: `%${userName}%`,
       });
     }
 
@@ -63,8 +63,8 @@ export class UsersService {
     };
   }
 
-  async getUserByUserNameService(userName: string): Promise<CoderzzxUsers | null> {
-    return await this.usersRepository.findOne({ where: { userName } });
+  async getUserByUserAccountService(userAccount: string): Promise<Users | null> {
+    return await this.usersRepository.findOne({ where: { userAccount } });
   }
 
   async createUserService(userInfo: ICreateUserBody) {

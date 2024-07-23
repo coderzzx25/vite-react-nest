@@ -11,13 +11,13 @@ import {
   RoleInfo,
 } from './roles.interface';
 import { timestampToDate, getTimestamp } from '../../utils/datetime';
-import { MenusService } from '../permissions/permissions.service';
+import { PermissionsService } from '../permissions/permissions.service';
 
 @Controller('roles')
 export class RolesController {
   constructor(
     private readonly rolesService: RolesService,
-    private readonly menusService: MenusService,
+    private readonly permissionService: PermissionsService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -47,7 +47,7 @@ export class RolesController {
       return {
         id: item.id,
         roleName: item.roleName,
-        roleMenus: item.roleMenus.split(',').map(Number),
+        rolePermissions: item.rolePermissions.split(',').map(Number),
         status: item.status,
         createTime: timestampToDate(item.createTime),
         updateTime: timestampToDate(item.updateTime),
@@ -64,9 +64,9 @@ export class RolesController {
   @HttpCode(200)
   @Post('create-role')
   async createRole(@Body() createRoleBody: ICreateRoleBody): Promise<string> {
-    const { roleName, roleMenus, status } = createRoleBody;
+    const { roleName, rolePermissions, status } = createRoleBody;
 
-    if (!roleName || !roleMenus || status === undefined) {
+    if (!roleName || !rolePermissions || status === undefined) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
@@ -79,7 +79,7 @@ export class RolesController {
 
     const newRoleInfo: ICreateRoleService = {
       roleName,
-      roleMenus: roleMenus.join(','),
+      rolePermissions: rolePermissions.join(','),
       status,
       createTime: getTimestamp(),
       updateTime: getTimestamp(),
@@ -98,7 +98,7 @@ export class RolesController {
   @HttpCode(200)
   @Post('update-role')
   async updateRole(@Body() updateRoleBody: IUpdateRoleBody) {
-    const { id, roleName, roleMenus, status } = updateRoleBody;
+    const { id, roleName, rolePermissions, status } = updateRoleBody;
 
     if (!id) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
@@ -109,14 +109,14 @@ export class RolesController {
     };
 
     // 校验菜单是否存在
-    if (roleMenus && roleMenus.length) {
-      const menuInfos = await this.menusService.getMenuListByIdsService(roleMenus);
+    if (rolePermissions && rolePermissions.length) {
+      const menuInfos = await this.permissionService.getPermissionListByIdsService(rolePermissions);
 
-      if (menuInfos.length !== roleMenus.length) {
+      if (menuInfos.length !== rolePermissions.length) {
         throw new HttpException('菜单不存在', HttpStatus.BAD_REQUEST);
       }
 
-      updateInfo.roleMenus = roleMenus.join(',');
+      updateInfo.rolePermissions = rolePermissions.join(',');
     }
 
     if (roleName) {
@@ -149,7 +149,7 @@ export class RolesController {
       return {
         id: item.id,
         roleName: item.roleName,
-        roleMenus: item.roleMenus.split(',').map(Number),
+        rolePermissions: item.rolePermissions.split(',').map(Number),
         status: item.status,
         createTime: timestampToDate(item.createTime),
         updateTime: timestampToDate(item.updateTime),

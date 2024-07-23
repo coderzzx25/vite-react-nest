@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { CoderzzxRoles } from '../entities/roles.entity';
+import { Roles } from '../entities/roles.entity';
 import { ICreateRoleService, ISelectRoleBody, IUpdateRoleService } from './roles.interface';
 
 @Injectable()
 export class RolesService {
-  constructor(@InjectRepository(CoderzzxRoles) private readonly rolesRepository: Repository<CoderzzxRoles>) {}
+  constructor(@InjectRepository(Roles) private readonly rolesRepository: Repository<Roles>) {}
   /**
    * 根据ID获取角色信息
    * @param id 角色ID
    * @returns 角色信息
    */
-  async getRoleByIdService(id: number): Promise<CoderzzxRoles | null> {
+  async getRoleByIdService(id: number): Promise<Roles | null> {
     const result = await this.rolesRepository.findOne({ where: { id } });
     return result;
   }
 
-  async getRoleListService(searchInfo: ISelectRoleBody): Promise<{ data: CoderzzxRoles[]; total: number }> {
+  async getRoleListService(searchInfo: ISelectRoleBody): Promise<{ data: Roles[]; total: number }> {
     const { page, size, roleName, status } = searchInfo;
     const roleQuery = this.rolesRepository.createQueryBuilder('roles');
 
@@ -43,7 +43,7 @@ export class RolesService {
     };
   }
 
-  async getRoleByNameService(roleName: string): Promise<CoderzzxRoles | null> {
+  async getRoleByNameService(roleName: string): Promise<Roles | null> {
     const result = await this.rolesRepository.findOne({ where: { roleName } });
     return result;
   }
@@ -59,12 +59,12 @@ export class RolesService {
     return result;
   }
 
-  async getRoleByIdsService(roleIds: number[]): Promise<CoderzzxRoles[]> {
+  async getRoleByIdsService(roleIds: number[]): Promise<Roles[]> {
     const result = await this.rolesRepository.find({ where: { id: In(roleIds) } });
     return result;
   }
 
-  async getAllRoleListService(): Promise<CoderzzxRoles[]> {
+  async getAllRoleListService(): Promise<Roles[]> {
     const result = await this.rolesRepository.find({ where: { status: 1 } });
     return result;
   }

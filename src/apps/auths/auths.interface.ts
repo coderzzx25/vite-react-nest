@@ -1,13 +1,13 @@
 export interface IAccountLoginBody {
-  userName: string;
+  userAccount: string;
   userPassword: string;
 }
 
 export interface IAccountLoginResponseData {
   userInfo: {
+    userAccount: string;
     userName: string;
-    userNickName: string;
-    userHead: string;
+    userAvatar: string;
     roleId: number;
   };
   accessToken: string;

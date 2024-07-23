@@ -1,43 +1,46 @@
-export interface ISelectMenuParams {
+export interface ISelectPermissionParams {
   page: number;
   size: number;
-  menuName?: string;
+  permissionName?: string;
   status?: number;
 }
 
-export interface IMenuInfo {
+export interface IPermissionInfo {
   id: number;
-  menuName: string;
-  menuIcon: string;
-  menuUrl: string;
-  menuPid: number;
+  permissionName: string;
+  permissionIcon: string;
+  permissionUrl: string;
+  permissionPid: number;
+  permissionType: number;
   status: number;
   createTime: string;
   updateTime: string;
-  children?: IMenuInfo[];
+  children?: IPermissionInfo[];
 }
 
-export interface ISelectMenuResponseData {
+export interface ISelectPermissionResponseData {
   total: number;
-  data: IMenuInfo[];
+  data: IPermissionInfo[];
 }
 
-export interface ICreateMenuBody {
-  menuName: string;
-  menuIcon: string;
-  menuUrl: string;
-  menuPid: number;
+export interface ICreatePermissionBody {
+  permissionName: string;
+  permissionIcon: string;
+  permissionUrl: string;
+  permissionPid: number;
+  permissionType: number;
   status: number;
   createTime?: number;
   updateTime?: number;
 }
 
-export interface IUpdateMenuBody {
+export interface IUpdatePermissionBody {
   id: number;
-  menuName?: string;
-  menuIcon?: string;
-  menuUrl?: string;
-  menuPid?: number;
+  permissionName?: string;
+  permissionIcon?: string;
+  permissionUrl?: string;
+  permissionPid?: number;
+  permissionType?: number;
   status?: number;
   updateTime?: number;
 }

@@ -1,20 +1,31 @@
-import { CoderzzxPermissions } from '../apps/entities/permissions.entity';
-import { IMenuInfo } from '../apps/permissions/permissions.interface';
+import { Permissions } from '../apps/entities/permissions.entity';
+import { IPermissionInfo } from '../apps/permissions/permissions.interface';
 import { timestampToDate } from './datetime';
 
-export const mapMenusToRoutes = (menuList: CoderzzxPermissions[]): IMenuInfo[] => {
-  const handleMenu = (menus: CoderzzxPermissions[], pid: number): IMenuInfo[] => {
-    return menus
-      .filter((menu) => menu.menuPid === pid)
-      .map((menu) => {
-        const { id, menuName, menuUrl, menuIcon, menuPid, status, createTime, updateTime } = menu;
-        const children = handleMenu(menus, id);
+export const mapPermissionToRoutes = (permissionList: Permissions[]): IPermissionInfo[] => {
+  const handlePermission = (permissions: Permissions[], pid: number): IPermissionInfo[] => {
+    return permissions
+      .filter((permission) => permission.permissionPid === pid)
+      .map((permission) => {
+        const {
+          id,
+          permissionName,
+          permissionUrl,
+          permissionIcon,
+          permissionPid,
+          permissionType,
+          status,
+          createTime,
+          updateTime,
+        } = permission;
+        const children = handlePermission(permissions, id);
         return {
           id,
-          menuName,
-          menuUrl,
-          menuIcon,
-          menuPid,
+          permissionName,
+          permissionUrl,
+          permissionIcon,
+          permissionPid,
+          permissionType,
           status,
           createTime: timestampToDate(createTime),
           updateTime: timestampToDate(updateTime),
@@ -22,5 +33,5 @@ export const mapMenusToRoutes = (menuList: CoderzzxPermissions[]): IMenuInfo[] =
         };
       });
   };
-  return handleMenu(menuList, 0);
+  return handlePermission(permissionList, 0);
 };

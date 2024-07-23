@@ -1,21 +1,21 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('coderzzx_permissions', { schema: 'coderzzx_django' })
-export class CoderzzxPermissions {
+@Entity('permissions', { schema: 'coderzzx' })
+export class Permissions {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', comment: 'ID' })
   id: number;
 
-  @Column('varchar', { name: 'menu_name', comment: '菜单名', length: 50 })
-  menuName: string;
+  @Column('varchar', { name: 'permission_name', comment: '权限名', length: 50 })
+  permissionName: string;
 
-  @Column('varchar', { name: 'menu_icon', comment: '菜单图标', length: 50 })
-  menuIcon: string;
+  @Column('varchar', { name: 'permission_icon', comment: '权限图标', length: 50, default: () => "''" })
+  permissionIcon: string;
 
-  @Column('varchar', { name: 'menu_url', comment: '菜单地址', length: 100 })
-  menuUrl: string;
+  @Column('varchar', { name: 'permission_url', comment: '权限地址', length: 100, default: () => "''" })
+  permissionUrl: string;
 
-  @Column('int', { name: 'menu_pid', comment: '父菜单', default: () => "'0'" })
-  menuPid: number;
+  @Column('int', { name: 'permission_pid', comment: '父权限', default: () => "'0'" })
+  permissionPid: number;
 
   @Column('tinyint', { name: 'permission_type', comment: '权限类型,1:页面,2:操作', width: 1, default: () => "'1'" })
   permissionType: number;

@@ -18,8 +18,8 @@ export class UsersController {
   async getUserList(
     @Query('page') page: number,
     @Query('size') size: number,
+    @Query('userAccount') userAccount?: string,
     @Query('userName') userName?: string,
-    @Query('userNick') userNick?: string,
     @Query('userRole') userRole?: number,
     @Query('status') status?: number,
   ): Promise<ISelectUserData> {
@@ -32,9 +32,9 @@ export class UsersController {
       size,
     };
 
-    if (userName) selectInfo.userName = userName;
+    if (userAccount) selectInfo.userAccount = userAccount;
 
-    if (userNick) selectInfo.userNick = userNick;
+    if (userName) selectInfo.userName = userName;
 
     if (userRole) selectInfo.userRole = userRole;
 
@@ -51,7 +51,7 @@ export class UsersController {
     const newRoleInfo: RoleInfo[] = roleInfo.map((item) => {
       return {
         ...item,
-        roleMenus: item.roleMenus.split(',').map(Number),
+        rolePermissions: item.rolePermissions.split(',').map(Number),
         createTime: timestampToDate(item.createTime),
         updateTime: timestampToDate(item.updateTime),
       };
@@ -77,9 +77,9 @@ export class UsersController {
   @HttpCode(200)
   @Post('create-user')
   async createUser(@Body() createUserBody: ICreateUserBody) {
-    const { userName, userNick, userHead, userRole, status } = createUserBody;
+    const { userAccount, userName, userAvatar, userRole, status } = createUserBody;
 
-    if (!userName || !userNick || !userHead || !userRole || status === undefined) {
+    if (!userName || !userAccount || !userAvatar || !userRole || status === undefined) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
@@ -89,7 +89,7 @@ export class UsersController {
       throw new HttpException('角色不存在', HttpStatus.BAD_REQUEST);
     }
 
-    const userInfo = await this.usersService.getUserByUserNameService(userName);
+    const userInfo = await this.usersService.getUserByUserAccountService(userAccount);
 
     if (userInfo) {
       throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
@@ -111,7 +111,7 @@ export class UsersController {
   @HttpCode(200)
   @Post('update-user')
   async updateUser(@Body() updateUserBody: IUpdateUserBody) {
-    const { id, userName, userNick, userHead, userRole, status } = updateUserBody;
+    const { id, userAccount, userName, userAvatar, userRole, status } = updateUserBody;
 
     if (!id) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
@@ -121,19 +121,19 @@ export class UsersController {
       id,
     };
 
-    if (userName) {
-      const userInfo = await this.usersService.getUserByUserNameService(userName);
+    if (userAccount) {
+      const userInfo = await this.usersService.getUserByUserAccountService(userAccount);
 
       if (userInfo && userInfo.id !== id) {
         throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
       }
 
-      updateInfo.userName = userName;
+      updateInfo.userAccount = userAccount;
     }
 
-    if (userNick) updateInfo.userNick = userNick;
+    if (userName) updateInfo.userName = userName;
 
-    if (userHead) updateInfo.userHead = userHead;
+    if (userAvatar) updateInfo.userAvatar = userAvatar;
 
     if (userRole) {
       const roleInfo = await this.rolesService.getRoleByIdService(userRole);
