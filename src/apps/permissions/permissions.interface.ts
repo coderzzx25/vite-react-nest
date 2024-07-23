@@ -11,7 +11,6 @@ export interface IPermissionInfo {
   permissionIcon: string;
   permissionUrl: string;
   permissionPid: number;
-  permissionType: number;
   status: number;
   createTime: string;
   updateTime: string;
@@ -28,7 +27,6 @@ export interface ICreatePermissionBody {
   permissionIcon: string;
   permissionUrl: string;
   permissionPid: number;
-  permissionType: number;
   status: number;
   createTime?: number;
   updateTime?: number;
@@ -40,7 +38,6 @@ export interface IUpdatePermissionBody {
   permissionIcon?: string;
   permissionUrl?: string;
   permissionPid?: number;
-  permissionType?: number;
   status?: number;
   updateTime?: number;
 }

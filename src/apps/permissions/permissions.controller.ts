@@ -63,17 +63,9 @@ export class PermissionController {
   @HttpCode(200)
   @Post('create-permission')
   async createPermission(@Body() createPermissionInfo: ICreatePermissionBody): Promise<string> {
-    const { permissionName, permissionIcon, permissionUrl, permissionPid, permissionType, status } =
-      createPermissionInfo;
+    const { permissionName, permissionIcon, permissionUrl, permissionPid, status } = createPermissionInfo;
 
-    if (
-      !permissionName ||
-      !permissionIcon ||
-      !permissionUrl ||
-      permissionPid === undefined ||
-      permissionType === undefined ||
-      status === undefined
-    ) {
+    if (!permissionName || !permissionIcon || !permissionUrl || permissionPid === undefined || status === undefined) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 

@@ -17,9 +17,6 @@ export class Permissions {
   @Column('int', { name: 'permission_pid', comment: '父权限', default: () => "'0'" })
   permissionPid: number;
 
-  @Column('tinyint', { name: 'permission_type', comment: '权限类型,1:页面,2:操作', width: 1, default: () => "'1'" })
-  permissionType: number;
-
   @Column('tinyint', {
     name: 'status',
     comment: '状态：0:失效，1:启用',
