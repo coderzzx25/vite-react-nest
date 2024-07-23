@@ -108,12 +108,12 @@ export class RolesController {
       id,
     };
 
-    // 校验菜单是否存在
+    // 校验权限是否存在
     if (rolePermissions && rolePermissions.length) {
       const menuInfos = await this.permissionService.getPermissionListByIdsService(rolePermissions);
 
       if (menuInfos.length !== rolePermissions.length) {
-        throw new HttpException('菜单不存在', HttpStatus.BAD_REQUEST);
+        throw new HttpException('权限不存在', HttpStatus.BAD_REQUEST);
       }
 
       updateInfo.rolePermissions = rolePermissions.join(',');

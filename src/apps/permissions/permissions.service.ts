@@ -38,9 +38,9 @@ export class PermissionsService {
   }
 
   /**
-   * 根据菜单名称获取菜单
-   * @param permissionName 菜单名称
-   * @returns 菜单信息
+   * 根据权限名称获取权限
+   * @param permissionName 权限名称
+   * @returns 权限信息
    */
   async getPermissionByNameService(permissionName: string): Promise<Permissions | null> {
     const result = await this.permissionsRepository.findOne({ where: { permissionName } });
@@ -48,9 +48,9 @@ export class PermissionsService {
   }
 
   /**
-   * 根据父级ID获取菜单
+   * 根据父级ID获取权限
    * @param menuPid 父级ID
-   * @returns 菜单信息
+   * @returns 权限信息
    */
   async getPermissionByPidService(permissionPid: number): Promise<Permissions | null> {
     const result = await this.permissionsRepository.findOne({ where: { permissionPid } });
@@ -58,9 +58,9 @@ export class PermissionsService {
   }
 
   /**
-   * 根据ID获取菜单
-   * @param id 菜单ID
-   * @returns 菜单信息
+   * 根据ID获取权限
+   * @param id 权限ID
+   * @returns 权限信息
    */
   async getPermissionByIdService(id: number): Promise<Permissions | null> {
     const result = await this.permissionsRepository.findOne({ where: { id } });
@@ -68,8 +68,8 @@ export class PermissionsService {
   }
 
   /**
-   * 创建菜单
-   * @param createInfo 菜单信息
+   * 创建权限
+   * @param createInfo 权限信息
    * @returns 创建结果
    */
   async createPermissionService(createInfo: ICreatePermissionBody) {
@@ -78,8 +78,8 @@ export class PermissionsService {
   }
 
   /**
-   * 更新菜单
-   * @param updateInfo 菜单信息
+   * 更新权限
+   * @param updateInfo 权限信息
    * @returns 更新结果
    */
   async updatePermissionService(updateInfo: IUpdatePermissionBody) {
@@ -89,9 +89,9 @@ export class PermissionsService {
   }
 
   /**
-   * 根据ID查询菜单列表
-   * @param ids 菜单ID列表
-   * @returns 菜单列表
+   * 根据ID查询权限列表
+   * @param ids 权限ID列表
+   * @returns 权限列表
    */
   async getPermissionListByIdsService(ids: number[]): Promise<Permissions[]> {
     const result = await this.permissionsRepository.find({ where: { id: In(ids) } });
@@ -99,8 +99,8 @@ export class PermissionsService {
   }
 
   /**
-   * 查询所有菜单
-   * @returns 菜单列表
+   * 查询所有权限
+   * @returns 权限列表
    */
   async getAllPermissionListService(): Promise<Permissions[]> {
     const result = await this.permissionsRepository.find();

@@ -8,7 +8,7 @@ export class Roles {
   @Column('varchar', { name: 'role_name', comment: '角色名', length: 50 })
   roleName: string;
 
-  @Column('varchar', { name: 'role_permissions', comment: '角色菜单', length: 255 })
+  @Column('varchar', { name: 'role_permissions', comment: '角色权限', length: 255 })
   rolePermissions: string;
 
   @Column('tinyint', {

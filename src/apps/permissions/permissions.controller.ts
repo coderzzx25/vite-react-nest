@@ -11,7 +11,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
-import { mapPermissionToRoutes } from '../../utils/map-menus';
+import { mapPermissionToRoutes } from '../../utils/map-permissions';
 import { AuthGuard } from '../auths/auth.guard';
 import {
   ISelectPermissionParams,
@@ -77,31 +77,31 @@ export class PermissionController {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
-    // 校验菜单名称是否重复
+    // 校验权限名称是否重复
     const permissionInfo = await this.permissionService.getPermissionByNameService(permissionName);
 
     if (permissionInfo) {
-      throw new HttpException('菜单名称重复', HttpStatus.BAD_REQUEST);
+      throw new HttpException('权限名称重复', HttpStatus.BAD_REQUEST);
     }
 
-    // 校验父级菜单是否存在
+    // 校验父级权限是否存在
     if (permissionPid !== 0) {
       const parentMenu = await this.permissionService.getPermissionByIdService(permissionPid);
 
       if (!parentMenu) {
-        throw new HttpException('父级菜单不存在', HttpStatus.BAD_REQUEST);
+        throw new HttpException('父级权限不存在', HttpStatus.BAD_REQUEST);
       }
     }
 
     createPermissionInfo.createTime = getTimestamp();
     createPermissionInfo.updateTime = getTimestamp();
 
-    // 创建菜单
+    // 创建权限
     try {
       await this.permissionService.createPermissionService(createPermissionInfo);
       return '创建成功';
     } catch (error) {
-      throw new HttpException('创建菜单失败', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('创建权限失败', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -113,11 +113,11 @@ export class PermissionController {
 
     if (!id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
-    // 校验菜单是否存在
+    // 校验权限是否存在
     const permissionInfo = await this.permissionService.getPermissionByIdService(id);
 
     if (!permissionInfo) {
-      throw new HttpException('菜单不存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException('权限不存在', HttpStatus.BAD_REQUEST);
     }
 
     const updateInfo: IUpdatePermissionBody = {
@@ -127,7 +127,7 @@ export class PermissionController {
     if (permissionName) {
       const permissionInfo = await this.permissionService.getPermissionByNameService(permissionName);
 
-      if (permissionInfo && permissionInfo.id !== id) throw new HttpException('菜单名称重复', HttpStatus.BAD_REQUEST);
+      if (permissionInfo && permissionInfo.id !== id) throw new HttpException('权限名称重复', HttpStatus.BAD_REQUEST);
 
       updateInfo.permissionName = permissionName;
     }
@@ -140,7 +140,7 @@ export class PermissionController {
       const parentMenu = await this.permissionService.getPermissionByPidService(permissionPid);
 
       if (!parentMenu) {
-        throw new HttpException('父级菜单不存在', HttpStatus.BAD_REQUEST);
+        throw new HttpException('父级权限不存在', HttpStatus.BAD_REQUEST);
       }
 
       updateInfo.permissionPid = permissionPid;
@@ -157,7 +157,7 @@ export class PermissionController {
 
     updateInfo.updateTime = getTimestamp();
 
-    // 更新菜单
+    // 更新权限
     try {
       await this.permissionService.updatePermissionService(updateInfo);
       return '更新成功';
