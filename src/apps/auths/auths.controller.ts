@@ -1,5 +1,6 @@
 import { Controller, Body, HttpException, HttpStatus, Post, HttpCode } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { AuthsService } from './auths.service';
 import { UsersService } from '../users/users.service';
 import { IAccountLoginBody, IAccountLoginResponseData } from './auths.interface';
@@ -11,6 +12,7 @@ export class AuthsController {
     private readonly authsService: AuthsService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('account-login')
@@ -45,12 +47,14 @@ export class AuthsController {
       expiresIn: '7d',
     });
 
+    const key = this.configService.get('NEST_ENCRYPTION_KEY');
+    const iv = this.configService.get('NEST_ENCRYPTION_IV');
     const data = {
       userInfo: {
         userAccount: userInfo.userAccount,
         userName: userInfo.userName,
         userAvatar: userInfo.userAvatar,
-        roleId: encryptData(userInfo.userRole.toString()),
+        roleId: encryptData(userInfo.userRole.toString(), key, iv),
       },
       accessToken: accessToken,
       refreshToken: refreshToken,

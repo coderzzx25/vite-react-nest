@@ -23,16 +23,14 @@ export const comparePasswords = async (password: string, hash: string): Promise<
 };
 
 const algorithm = 'aes-256-cbc'; // 加密算法
-const key = crypto.randomBytes(32); // 32位密钥
-const iv = crypto.randomBytes(16); // 16位向量
 
 /**
  * 加密
  * @param {string} data - 数据
  * @returns {string} - 加密后的数据
  */
-export const encryptData = (data: string): string => {
-  const cipher = crypto.createCipheriv(algorithm, key, iv);
+export const encryptData = (data: string, key: string, iv: string): string => {
+  const cipher = crypto.createCipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
   let encrypted = cipher.update(data, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   return encrypted;
@@ -43,8 +41,8 @@ export const encryptData = (data: string): string => {
  * @param {string} encrypted - 加密后的数据
  * @returns {string} - 解密后的数据
  */
-export const decryptData = (encrypted: string): string => {
-  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+export const decryptData = (encrypted: string, key: string, iv: string): string => {
+  const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
   let decrypted = decipher.update(encrypted, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;

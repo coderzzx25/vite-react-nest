@@ -10,6 +10,7 @@ import {
   HttpCode,
   Post,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PermissionsService } from './permissions.service';
 import { mapPermissionToRoutes } from '../../utils/map-permissions';
 import { AuthGuard } from '../auths/auth.guard';
@@ -29,6 +30,7 @@ export class PermissionController {
   constructor(
     private readonly permissionService: PermissionsService,
     private readonly rolesService: RolesService,
+    private readonly configService: ConfigService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -164,8 +166,10 @@ export class PermissionController {
   async getUserPermissionList(@Param('roleId') role_id: string): Promise<IPermissionInfo[]> {
     if (!role_id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
+    const key = this.configService.get('NEST_ENCRYPTION_KEY');
+    const iv = this.configService.get('NEST_ENCRYPTION_IV');
     // 校验角色是否存在
-    const roleInfo = await this.rolesService.getRoleByIdService(Number(decryptData(role_id)));
+    const roleInfo = await this.rolesService.getRoleByIdService(Number(decryptData(role_id, key, iv)));
 
     if (!roleInfo) throw new HttpException('角色不存在', HttpStatus.BAD_REQUEST);
 
