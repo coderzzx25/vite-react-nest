@@ -22,6 +22,7 @@ import {
 } from './permissions.interface';
 import { getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
+import { decryptData } from '../../utils/data-encryption';
 
 @Controller('permissions')
 export class PermissionController {
@@ -160,11 +161,11 @@ export class PermissionController {
 
   @UseGuards(AuthGuard)
   @Get('user-permissions/:roleId')
-  async getUserPermissionList(@Param('roleId') role_id: number): Promise<IPermissionInfo[]> {
+  async getUserPermissionList(@Param('roleId') role_id: string): Promise<IPermissionInfo[]> {
     if (!role_id) throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
 
     // 校验角色是否存在
-    const roleInfo = await this.rolesService.getRoleByIdService(role_id);
+    const roleInfo = await this.rolesService.getRoleByIdService(Number(decryptData(role_id)));
 
     if (!roleInfo) throw new HttpException('角色不存在', HttpStatus.BAD_REQUEST);
 

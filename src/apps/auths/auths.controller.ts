@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthsService } from './auths.service';
 import { UsersService } from '../users/users.service';
 import { IAccountLoginBody, IAccountLoginResponseData } from './auths.interface';
+import { comparePasswords, encryptData } from '../../utils/data-encryption';
 
 @Controller('auths')
 export class AuthsController {
@@ -27,7 +28,8 @@ export class AuthsController {
       throw new HttpException('账户名不存在', HttpStatus.BAD_REQUEST);
     }
 
-    if (userInfo.userPassword !== userPassword) {
+    const isMatch = await comparePasswords(userPassword, userInfo.userPassword);
+    if (!isMatch) {
       throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
     }
 
@@ -48,7 +50,7 @@ export class AuthsController {
         userAccount: userInfo.userAccount,
         userName: userInfo.userName,
         userAvatar: userInfo.userAvatar,
-        roleId: userInfo.userRole,
+        roleId: encryptData(userInfo.userRole.toString()),
       },
       accessToken: accessToken,
       refreshToken: refreshToken,

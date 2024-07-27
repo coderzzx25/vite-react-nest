@@ -8,7 +8,7 @@ export interface IAccountLoginResponseData {
     userAccount: string;
     userName: string;
     userAvatar: string;
-    roleId: number;
+    roleId: string;
   };
   accessToken: string;
   refreshToken: string;

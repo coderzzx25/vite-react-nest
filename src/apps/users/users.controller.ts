@@ -5,6 +5,7 @@ import { timestampToDate, getTimestamp } from '../../utils/datetime';
 import { RolesService } from '../roles/roles.service';
 import { RoleInfo } from '../roles/roles.interface';
 import { AuthGuard } from '../auths/auth.guard';
+import { encryptPassword } from '../../utils/data-encryption';
 
 @Controller('users')
 export class UsersController {
@@ -95,7 +96,8 @@ export class UsersController {
       throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST);
     }
 
-    createUserBody.userPassword = '123456'; // 默认密码
+    const defaultPassword = await encryptPassword('123456');
+    createUserBody.userPassword = defaultPassword;
     createUserBody.createTime = getTimestamp();
     createUserBody.updateTime = getTimestamp();
 
