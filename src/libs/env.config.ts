@@ -2,7 +2,7 @@ import { ConfigModuleOptions } from '@nestjs/config';
 
 const configModel: ConfigModuleOptions = {
   isGlobal: true,
-  envFilePath: ['.env', '.env.development'],
+  envFilePath: ['.env.development', '.env.production'],
 };
 
 export default configModel;
