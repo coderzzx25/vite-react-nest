@@ -10,7 +10,7 @@ export interface IPermissionInfo {
   permissionName: string;
   permissionIcon: string;
   permissionUrl: string;
-  permissionPid: number;
+  permissionPid: number[];
   status: number;
   createTime: string;
   updateTime: string;
