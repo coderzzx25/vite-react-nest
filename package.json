@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "npm run copy-keys && nest start --watch",
     "start:debug": "npm run copy-keys && nest start --debug --watch",
-    "start:prod": "npm run copy-keys && node dist/main ",
+    "start:prod": "npm run copy-keys && node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "copy-keys": "copyfiles -u 2 src/keys/*.key dist/keys/"
   },
