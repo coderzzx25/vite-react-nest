@@ -24,7 +24,7 @@ services:
     depends_on:
       - mysql
     environment:
-      NEST_MYSQL_HOST: ${NEST_MYSQL_HOST}
+      NEST_MYSQL_HOST: mysql
       NEST_MYSQL_PORT: ${NEST_MYSQL_PORT}
       NEST_MYSQL_USER: ${NEST_MYSQL_USER}
       NEST_MYSQL_PASSWORD: ${NEST_MYSQL_PASSWORD}
