@@ -4,11 +4,8 @@ services:
   mysql:
     image: mysql:5.7
     container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${NEST_MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${NEST_MYSQL_DATABASE}
-      MYSQL_USER: ${NEST_MYSQL_USER}
-      MYSQL_PASSWORD: ${NEST_MYSQL_PASSWORD}
+    env_file:
+      - .env
     ports:
       - "3306:3306"
     volumes:
@@ -23,16 +20,8 @@ services:
       - "3000:3000"
     depends_on:
       - mysql
-    environment:
-      NEST_MYSQL_HOST: localhost
-      NEST_MYSQL_PORT: ${NEST_MYSQL_PORT}
-      NEST_MYSQL_USER: ${NEST_MYSQL_USER}
-      NEST_MYSQL_PASSWORD: ${NEST_MYSQL_PASSWORD}
-      NEST_MYSQL_DATABASE: ${NEST_MYSQL_DATABASE}
-      NEST_MYSQL_CHARSET: ${NEST_MYSQL_CHARSET}
-      NEST_MYSQL_TIMEZONE: ${NEST_MYSQL_TIMEZONE}
-      NEST_ENCRYPTION_KEY: ${NEST_ENCRYPTION_KEY}
-      NEST_ENCRYPTION_IV: ${NEST_ENCRYPTION_IV}
+    env_file:
+      - .env
 
 volumes:
   mysql_data:
