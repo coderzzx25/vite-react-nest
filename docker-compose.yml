@@ -9,8 +9,6 @@ services:
       - "3000:3000"
     networks:
       - nest_network
-    depends_on:
-      - mysql
     env_file:
       - .env
 
