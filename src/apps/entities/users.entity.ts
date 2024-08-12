@@ -24,6 +24,14 @@ export class Users {
   })
   userRole: number;
 
+  @Column('varchar', {
+    name: 'github_id',
+    comment: 'github_id',
+    length: 50,
+    default: () => "''",
+  })
+  githubId: string;
+
   @Column('tinyint', {
     name: 'status',
     comment: '状态：0:失效，1:启用',

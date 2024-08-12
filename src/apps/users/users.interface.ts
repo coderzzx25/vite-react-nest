@@ -32,6 +32,7 @@ export interface ICreateUserBody {
   userAvatar: string;
   userRole: number;
   status: number;
+  githubId?: string;
   createTime?: number;
   updateTime?: number;
 }

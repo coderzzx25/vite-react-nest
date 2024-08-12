@@ -48,4 +48,4 @@ CREATE TABLE `users`  (
 
 INSERT INTO `users` VALUES (1, 'admin', '$2a$10$3MBlppFjTiqzJKgxP9o5oeVumgI5Bt.FnOn41BMZc7qXFQbI0z1jC', 'https://github.githubassets.com/assets/pull-shark-default-498c279a747d.png', 'coderzzx', 1, 1, UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()));
 
-
+ALTER TABLE users ADD github_id varchar(50) NOT NULL DEFAULT '' COMMENT 'github_id';

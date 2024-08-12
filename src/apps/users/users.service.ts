@@ -77,4 +77,8 @@ export class UsersService {
     const result = await this.usersRepository.update(id, rest);
     return result;
   }
+
+  async getUserInfoByGithubId(id: string) {
+    return await this.usersRepository.findOne({ where: { githubId: id } });
+  }
 }
