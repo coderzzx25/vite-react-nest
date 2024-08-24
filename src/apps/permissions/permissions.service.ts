@@ -25,6 +25,7 @@ export class PermissionsService {
       menuQuery.andWhere('permissions.status = :status', { status });
     }
 
+    menuQuery.andWhere('permissions.permissionPid = 0');
     menuQuery.orderBy('permissions.id', 'ASC');
     menuQuery.offset((page - 1) * size);
     menuQuery.limit(size);
@@ -93,8 +94,8 @@ export class PermissionsService {
    * @param ids 权限ID列表
    * @returns 权限列表
    */
-  async getPermissionListByIdsService(ids: number[]): Promise<Permissions[]> {
-    const result = await this.permissionsRepository.find({ where: { id: In(ids) } });
+  async getPermissionListByIdsService(ids: number[], permissionType?: number): Promise<Permissions[]> {
+    const result = await this.permissionsRepository.find({ where: { id: In(ids), permissionType } });
     return result;
   }
 
@@ -102,13 +103,24 @@ export class PermissionsService {
    * 查询所有权限
    * @returns 权限列表
    */
-  async getAllPermissionListService(): Promise<Permissions[]> {
+  async getAllPermissionListService(type: number): Promise<Permissions[]> {
+    if (type === 0) {
+      const result = await this.permissionsRepository.find({ where: { permissionType: 1 } });
+      return result;
+    }
     const result = await this.permissionsRepository.find();
     return result;
   }
 
   async getPermissionByIdsService(ids: number[]): Promise<Permissions[]> {
     const result = await this.permissionsRepository.find({ where: { id: In(ids) } });
+    return result;
+  }
+
+  async getPermissionListByPidsService(pid: number[]): Promise<Permissions[]> {
+    const result = await this.permissionsRepository.find({
+      where: { permissionPid: In(pid) },
+    });
     return result;
   }
 }

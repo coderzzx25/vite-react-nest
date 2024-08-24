@@ -7,7 +7,8 @@ export const mapPermissionToRoutes = (permissionList: Permissions[]): IPermissio
     return permissions
       .filter((permission) => permission.permissionPid === pid)
       .map((permission) => {
-        const { id, permissionName, permissionUrl, permissionIcon, status, createTime, updateTime } = permission;
+        const { id, permissionName, permissionUrl, permissionIcon, permissionType, status, createTime, updateTime } =
+          permission;
         const currentParentIds = pid === 0 ? [0] : [...parentIds, pid];
         const children = handlePermission(permissions, id, currentParentIds);
         return {
@@ -16,6 +17,7 @@ export const mapPermissionToRoutes = (permissionList: Permissions[]): IPermissio
           permissionUrl,
           permissionIcon,
           permissionPid: currentParentIds.length === 1 && currentParentIds[0] === 0 ? [0] : currentParentIds.slice(1),
+          permissionType,
           status,
           createTime: timestampToDate(createTime),
           updateTime: timestampToDate(updateTime),

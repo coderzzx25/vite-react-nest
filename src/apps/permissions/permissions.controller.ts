@@ -54,11 +54,27 @@ export class PermissionController {
 
     if (status) selectInfo.status = status;
 
-    const { data, total } = await this.permissionService.getPermissionListService(selectInfo);
+    const { data: initialData, total } = await this.permissionService.getPermissionListService(selectInfo);
+
+    const fetchAllPermissions = async (ids: number[]): Promise<any[]> => {
+      if (ids.length === 0) return [];
+
+      const permissions = await this.permissionService.getPermissionListByPidsService(ids);
+
+      const childPermissionIds = permissions.map((item) => item.id);
+
+      const childPermissions = await fetchAllPermissions(childPermissionIds);
+
+      return [...permissions, ...childPermissions];
+    };
+
+    const allPermissions = await fetchAllPermissions(initialData.map((item) => item.id));
+
+    const combinedPermissions = [...initialData, ...allPermissions];
 
     return {
       total,
-      data: mapPermissionToRoutes(data),
+      data: mapPermissionToRoutes(combinedPermissions),
     };
   }
 
@@ -66,9 +82,15 @@ export class PermissionController {
   @HttpCode(200)
   @Post('create-permission')
   async createPermission(@Body() createPermissionInfo: ICreatePermissionBody): Promise<string> {
-    const { permissionName, permissionIcon, permissionUrl, permissionPid, status } = createPermissionInfo;
+    const { permissionName, permissionUrl, permissionPid, permissionType, status } = createPermissionInfo;
 
-    if (!permissionName || !permissionIcon || !permissionUrl || permissionPid === undefined || status === undefined) {
+    if (
+      !permissionName ||
+      !permissionUrl ||
+      permissionPid === undefined ||
+      status === undefined ||
+      permissionType === undefined
+    ) {
       throw new HttpException('参数错误', HttpStatus.BAD_REQUEST);
     }
 
@@ -177,15 +199,15 @@ export class PermissionController {
 
     const roleArray = rolePermissions.split(',').map(Number);
 
-    const permissionList = await this.permissionService.getPermissionListByIdsService(roleArray);
+    const permissionList = await this.permissionService.getPermissionListByIdsService(roleArray, 1);
 
     return mapPermissionToRoutes(permissionList);
   }
 
   @UseGuards(AuthGuard)
-  @Get('all-permission-list')
-  async getAllPermissionList(): Promise<IPermissionInfo[]> {
-    const permissionList = await this.permissionService.getAllPermissionListService();
+  @Get('all-permission-list/:type')
+  async getAllPermissionList(@Param('type') type: number): Promise<IPermissionInfo[]> {
+    const permissionList = await this.permissionService.getAllPermissionListService(type);
     return mapPermissionToRoutes(permissionList);
   }
 }
